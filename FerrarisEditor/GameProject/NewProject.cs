@@ -24,35 +24,45 @@ namespace FerrarisEditor.GameProject
         [DataMember]
         public List<string> Folders { get; set; }
 
+        public byte[] Icon { get; set; }
+
+        public byte[] Screenshot { get; set; }
+
+        public string IconFilePath { get; set; }
+
+        public string ScreenshotFilePath { get; set; }
+
+        public string ProjectFilePath { get; set; }
+
     }
     class NewProject : ViewModelBase
     {
         // TODO: get the path from the installation location
         private readonly string _templatePath = @"..\..\FerrarisEditor\ProjectTemplates";
-        private string _name = "NewProject";
-        public string Name
+        private string _projectName = "NewProject";
+        public string ProjectName
         {
-            get => _name;
+            get => _projectName;
             set
             {
-                if (_name != value)
+                if (_projectName != value)
                 {
-                    _name = value;
-                    OnPropertyChanged(nameof(Name));
+                    _projectName = value;
+                    OnPropertyChanged(nameof(ProjectName));
                 }
             }
         }
         // 设置默认路径
-        private string _path = $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\FerrarisProject\";
-        public string Path
+        private string _projectPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\FerrarisProject\";
+        public string ProjectPath
         {
-            get => _path;
+            get => _projectPath;
             set
             {
-                if (_path != value)
+                if (_projectPath != value)
                 {
-                    _path = value;
-                    OnPropertyChanged(nameof(Path));
+                    _projectPath = value;
+                    OnPropertyChanged(nameof(ProjectPath));
                 }
             }
         }
@@ -72,20 +82,15 @@ namespace FerrarisEditor.GameProject
                 Debug.Assert(templatesFiles.Any());
                 foreach (var file in templatesFiles)
                 {
-                    //var template = Serializer.FromFile<ProjectTemplate>(file);
-                    //_projectTemplates.Add(template);
-                    var template = new ProjectTemplate()
-                    {
-                        ProjectType = "Empty project",
-                        ProjectFile = "project.ferraris",
-                        Folders = new List<string>()
-                        {
-                            ".ferraris",
-                            "Content",
-                            "GameCode"
-                        }
-                    };
-                    Serializer.ToFile<ProjectTemplate>(template, file);
+                    // read the project configuration from the template.xml file
+                    var template = Serializer.FromFile<ProjectTemplate>(file);
+                    template.IconFilePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(file), "icon.png"));
+                    template.Icon = File.ReadAllBytes(template.IconFilePath);
+                    template.ScreenshotFilePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(file), "Screenshot.png"));
+                    template.Screenshot = File.ReadAllBytes(template.ScreenshotFilePath);
+                    template.ProjectFilePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(file), template.ProjectFile)) ;
+                    
+                    _projectTemplates.Add(template);
                 }
             }
             catch(Exception ex)

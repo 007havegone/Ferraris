@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace FerrarisEditor.GameProject
 {
     /// <summary>
-    /// CreateProjectView.xaml 的交互逻辑
+    /// NewProjectView.xaml 的交互逻辑
     /// </summary>
-    public partial class CreateProjectView : UserControl
+    public partial class NewProjectView : UserControl
     {
-        public CreateProjectView()
+        public NewProjectView()
         {
             InitializeComponent();
         }

@@ -20,7 +20,7 @@
 
         <StackPanel Orientation="Horizontal" Grid.Row="1" x:Name="browserContent">
             <local:OpenProjectView/>
-            <local:CreateProjectView/>
+            <local:NewProjectView/>
         </StackPanel>
     </Grid>
 </Window>

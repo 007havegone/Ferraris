@@ -145,8 +145,8 @@ namespace FerrarisEditor.GameProject
                 return string.Empty;
             }
 
-            if (ProjectPath.Last() != '\\') ProjectPath += @"\";
-            var path = $@"{ProjectPath}\{ProjectName}";// this code contain bug need fix
+             if (ProjectPath.Last() != '\\') ProjectPath += @"\";
+            var path = $@"{ProjectPath}{ProjectName}\";
 
             try
             {
@@ -155,12 +155,15 @@ namespace FerrarisEditor.GameProject
                 {
                     Directory.CreateDirectory(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(path), folder)));
                 }
-                var dirInfo = new DirectoryInfo(path + @"\.Ferraris");
+                var dirInfo = new DirectoryInfo(path + @".Ferraris\");
                 dirInfo.Attributes |= FileAttributes.Hidden;
                 File.Copy(template.IconFilePath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "icon.png")));
                 File.Copy(template.ScreenshotFilePath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "Screenshot.png")));
 
-                return "";
+                // now we serialize the data of project, for later reuse.
+                var project = new Project(ProjectName, path);
+                Serializer.ToFile(project, path + $"{ProjectName}"+ Project.Extension);
+                return path;
             }
             catch (Exception ex)
             {

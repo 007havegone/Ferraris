@@ -58,6 +58,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="GameProject\Project.cs" />
+    <Compile Include="GameProject\Scene.cs" />
     <Compile Include="Utilities\Serializer.cs" />
     <Page Include="GameProject\NewProjectView.xaml">
       <SubType>Designer</SubType>

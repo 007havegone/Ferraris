@@ -161,8 +161,12 @@ namespace FerrarisEditor.GameProject
                 File.Copy(template.ScreenshotFilePath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "Screenshot.png")));
 
                 // now we serialize the data of project, for later reuse.
-                var project = new Project(ProjectName, path);
-                Serializer.ToFile(project, path + $"{ProjectName}"+ Project.Extension);
+                //var project = new Project(ProjectName, path);
+                //Serializer.ToFile(project, path + $"{ProjectName}"+ Project.Extension);
+                var projectXml = File.ReadAllText(template.ProjectFilePath);
+                projectXml = string.Format(projectXml, ProjectName, ProjectPath);// fill the placeholder in the file
+                var projectPath = Path.GetFullPath(Path.Combine(path, $"{ProjectName}{Project.Extension}"));
+                File.WriteAllText(projectPath, projectXml);// copy the project.ferraris file from default template
                 return path;
             }
             catch (Exception ex)

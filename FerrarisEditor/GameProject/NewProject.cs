@@ -7,8 +7,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FerrarisEditor.GameProject
 {
@@ -48,6 +46,7 @@ namespace FerrarisEditor.GameProject
                 if (_projectName != value)
                 {
                     _projectName = value;
+                    ValidateProjectPath();// check the project path
                     OnPropertyChanged(nameof(ProjectName));
                 }
             }
@@ -66,6 +65,36 @@ namespace FerrarisEditor.GameProject
                 }
             }
         }
+        private bool _isValid = false;
+
+        public bool IsValid
+        {
+            get => _isValid;
+
+            set
+            {
+                if(_isValid != value)
+                {
+                    _isValid = value;
+                    OnPropertyChanged(nameof(IsValid));
+                }
+            }
+        }
+        private string _errorMsg;
+        public string ErrorMsg
+        {
+            get => _errorMsg;
+
+            set
+            {
+                if (_errorMsg != value)
+                {
+                    _errorMsg = value;
+                    OnPropertyChanged(nameof(ErrorMsg));
+                }
+            }
+        }
+
 
         // bind the view
         private ObservableCollection<ProjectTemplate> _projectTemplates = new ObservableCollection<ProjectTemplate>();
@@ -73,6 +102,74 @@ namespace FerrarisEditor.GameProject
         public ReadOnlyCollection<ProjectTemplate> ProjectTemplates
         { get; }
 
+        private bool ValidateProjectPath()
+        {
+            var path = ProjectPath;
+            if (path.Last<char>() != '\\') path += @"\";
+            path += $@"{ProjectName}\";
+
+            IsValid = false;
+            if(string.IsNullOrWhiteSpace(ProjectName.Trim()))
+            {
+                ErrorMsg = "Type in a project name.";
+            }
+            else if(ProjectName.IndexOfAny(Path.GetInvalidFileNameChars()) != -1)
+            {
+                ErrorMsg = "Invalid character(s) used in project name.";
+            }
+            else if(string.IsNullOrWhiteSpace(ProjectPath.Trim()))
+            {
+                ErrorMsg = "Select a valid project folder.";
+            }
+            else if(ProjectPath.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+            {
+                ErrorMsg = "Invalid character(s) used in project path.";
+            }
+            else if(Directory.Exists(path) && Directory.EnumerateFileSystemEntries(path).Any())
+            {
+                ErrorMsg = "Selected project folder already exists and is not empty";
+            }
+            else
+            {
+                ErrorMsg = string.Empty;
+                IsValid = true;
+            }
+            return IsValid;
+        }
+
+        public string CreateProject(ProjectTemplate template)
+        {
+            ValidateProjectPath();
+            if(!IsValid)
+            {
+                return string.Empty;
+            }
+
+            if (ProjectPath.Last() != '\\') ProjectPath += @"\";
+            var path = $@"{ProjectPath}\{ProjectName}";// this code contain bug need fix
+
+            try
+            {
+                if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+                foreach(var folder in template.Folders)
+                {
+                    Directory.CreateDirectory(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(path), folder)));
+                }
+                var dirInfo = new DirectoryInfo(path + @"\.Ferraris");
+                dirInfo.Attributes |= FileAttributes.Hidden;
+                File.Copy(template.IconFilePath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "icon.png")));
+                File.Copy(template.ScreenshotFilePath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "Screenshot.png")));
+
+                return "";
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                // TODO: log err
+                return string.Empty;
+            }
+
+        }
         public NewProject()
         {
             ProjectTemplates = new ReadOnlyCollection<ProjectTemplate>(_projectTemplates);
@@ -92,6 +189,7 @@ namespace FerrarisEditor.GameProject
                     
                     _projectTemplates.Add(template);
                 }
+                ValidateProjectPath();
             }
             catch(Exception ex)
             {

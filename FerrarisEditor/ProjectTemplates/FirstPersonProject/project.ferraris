@@ -5,8 +5,9 @@
 	<Path>{1}</Path>
 	<Scenes>
 		<Scene z:Id="i2">
-		<Name>Default scene</Name>
-		<Project z:Ref="i1"/>
+			<IsActive>true</IsActive>
+			<Name>Default scene</Name>
+			<Project z:Ref="i1"/>
 		</Scene>
 	</Scenes>
 </Game>

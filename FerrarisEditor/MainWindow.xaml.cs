@@ -1,6 +1,7 @@
 ﻿using FerrarisEditor.GameProject;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,13 @@ namespace FerrarisEditor
         {
             InitializeComponent();
             Loaded += OnMainWindowLoaded;
+            Closing += OnMainWindowClosing;
+        }
+
+        private void OnMainWindowClosing(object sender, CancelEventArgs e)
+        {
+            Closing -= OnMainWindowClosing;
+            OpenProjectBrowserDialog();
         }
 
         private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
@@ -36,13 +44,14 @@ namespace FerrarisEditor
         private void OpenProjectBrowserDialog()
         {
             var projectBrowser = new ProjectBrowserDialog();
-            if(projectBrowser.ShowDialog() == false)
+            if(projectBrowser.ShowDialog() == false || projectBrowser.DataContext == null)// check the dialog
             {
                 Application.Current.Shutdown();
             }
             else
             {
-
+                Project.Current?.Unload();// if had project loaded, unload it.
+                DataContext = projectBrowser.DataContext;// pass the dialog data context to Main window
             }
         }
     }

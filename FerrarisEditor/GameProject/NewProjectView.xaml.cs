@@ -28,13 +28,15 @@ namespace FerrarisEditor.GameProject
         private void OnCreate_Button_Click(object sender, RoutedEventArgs e)
         {
             var vm = DataContext as NewProject;
-            // use the slected item as template
+            // use the selected item as template
             var projectPath = vm.CreateProject(templateListBox.SelectedItem as ProjectTemplate);
             bool dialogResult = false;
             var win = Window.GetWindow(this);
             if(!string.IsNullOrEmpty(projectPath))
             {
                 dialogResult = true;
+                var project = OpenProject.Open(new ProjectData() { ProjectName = vm.ProjectName, ProjectPath = projectPath });// here has bug
+                win.DataContext = project;// set the data context, then we get project in the Main window
             }
             win.DialogResult = dialogResult;
             win.Close();

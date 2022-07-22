@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FerrarisEditor
 {
-    [DataContract(IsReference = true)]
+    [DataContract(IsReference = true)] // because this object is ref to Scene object
     public class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

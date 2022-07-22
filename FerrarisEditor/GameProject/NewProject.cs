@@ -38,7 +38,7 @@ namespace FerrarisEditor.GameProject
         // TODO: get the path from the installation location
         private readonly string _templatePath = @"..\..\FerrarisEditor\ProjectTemplates";
         private string _projectName = "NewProject";
-        public string ProjectName
+        public string ProjectName // 面板中的项目名
         {
             get => _projectName;
             set
@@ -53,7 +53,7 @@ namespace FerrarisEditor.GameProject
         }
         // 设置默认路径
         private string _projectPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\FerrarisProject\";
-        public string ProjectPath
+        public string ProjectPath // 面板中的项目路径
         {
             get => _projectPath;
             set
@@ -105,10 +105,12 @@ namespace FerrarisEditor.GameProject
         private bool ValidateProjectPath()
         {
             var path = ProjectPath;
+
             if (path.Last<char>() != '\\') path += @"\";
-            path += $@"{ProjectName}\";
+            path += $@"{ProjectName}\";// 组合得到真正的项目路径
 
             IsValid = false;
+            // project Name error
             if(string.IsNullOrWhiteSpace(ProjectName.Trim()))
             {
                 ErrorMsg = "Type in a project name.";
@@ -117,6 +119,7 @@ namespace FerrarisEditor.GameProject
             {
                 ErrorMsg = "Invalid character(s) used in project name.";
             }
+            // project Path error
             else if(string.IsNullOrWhiteSpace(ProjectPath.Trim()))
             {
                 ErrorMsg = "Select a valid project folder.";
@@ -146,7 +149,7 @@ namespace FerrarisEditor.GameProject
             }
 
              if (ProjectPath.Last() != '\\') ProjectPath += @"\";
-            var path = $@"{ProjectPath}{ProjectName}\";
+            var path = $@"{ProjectPath}{ProjectName}\";//full path of proejct
 
             try
             {
@@ -156,7 +159,7 @@ namespace FerrarisEditor.GameProject
                     Directory.CreateDirectory(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(path), folder)));
                 }
                 var dirInfo = new DirectoryInfo(path + @".Ferraris\");
-                dirInfo.Attributes |= FileAttributes.Hidden;
+                dirInfo.Attributes |= FileAttributes.Hidden;// hide this directory
                 File.Copy(template.IconFilePath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "icon.png")));
                 File.Copy(template.ScreenshotFilePath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "Screenshot.png")));
 

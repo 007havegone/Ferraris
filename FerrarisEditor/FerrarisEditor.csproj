@@ -57,6 +57,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Editors\WorldEditor\ProjectLayoutView.xaml.cs">
       <DependentUpon>ProjectLayoutView.xaml</DependentUpon>
     </Compile>
@@ -68,6 +69,9 @@
     <Compile Include="GameProject\Scene.cs" />
     <Compile Include="Utilities\Serializer.cs" />
     <Compile Include="Utilities\UndoRedo.cs" />
+    <Compile Include="Utilities\UndoRedoView.xaml.cs">
+      <DependentUpon>UndoRedoView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Editors\WorldEditor\ProjectLayoutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -111,6 +115,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Utilities\UndoRedoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

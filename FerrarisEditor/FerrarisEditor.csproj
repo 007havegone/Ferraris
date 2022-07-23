@@ -67,6 +67,7 @@
     <Compile Include="GameProject\Project.cs" />
     <Compile Include="GameProject\Scene.cs" />
     <Compile Include="Utilities\Serializer.cs" />
+    <Compile Include="Utilities\UndoRedo.cs" />
     <Page Include="Editors\WorldEditor\ProjectLayoutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

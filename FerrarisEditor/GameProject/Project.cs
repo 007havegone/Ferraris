@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Windows;
+using System.Windows.Input;
 
 namespace FerrarisEditor.GameProject
 {
@@ -47,13 +48,21 @@ namespace FerrarisEditor.GameProject
 
         public static Project Current => Application.Current.MainWindow.DataContext as Project;
 
-        public void AddScene(string sceneName)
+        public static UndoRedo UndoRedo { get; } = new UndoRedo();
+
+        public ICommand Undo { get; private set; }
+        public ICommand Redo { get; private set; }
+
+        public ICommand AddScene { get; private set; }
+        public ICommand RemoveScene { get; private set; }
+
+        public void AddSceneInternal(string sceneName)
         {
             Debug.Assert(!string.IsNullOrEmpty(sceneName.Trim()));
             _scenes.Add(new Scene(this, sceneName));
         }
 
-        public void RemoveScene(Scene scene)
+        public void RemoveSceneInternal(Scene scene)
         {
             Debug.Assert(_scenes.Contains(scene));
             _scenes.Remove(scene);
@@ -86,6 +95,32 @@ namespace FerrarisEditor.GameProject
                 OnPropertyChanged(nameof(Scenes));
             }
             ActiveScene = Scenes.FirstOrDefault(x => x.IsActive);
+
+            // create the command
+            AddScene = new RelayCommand<Object>(x =>
+            {
+                AddSceneInternal($"New Scene {_scenes.Count}");
+                var newScene = _scenes.Last();
+                var sceneIndex = _scenes.Count - 1;// insert into last place, why need index?
+                UndoRedo.Add(new UndoRedoAction(
+                    () => RemoveSceneInternal(newScene),
+                    () => _scenes.Insert(sceneIndex, newScene),
+                    $"Add {newScene.Name}"));
+            });
+
+            RemoveScene = new RelayCommand<Scene>(x =>
+            {
+                var sceneIndex = _scenes.IndexOf(x);
+                RemoveSceneInternal(x);
+
+                UndoRedo.Add(new UndoRedoAction(
+                    () => _scenes.Insert(sceneIndex, x),
+                    () => RemoveSceneInternal(x),
+                    $"Remove {x.Name}"));
+            }, x=> !x.IsActive);
+
+            Undo = new RelayCommand<Object>(x => UndoRedo.Undo());
+            Redo = new RelayCommand<Object>(x => UndoRedo.Redo());
         }
 
 

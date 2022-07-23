@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace FerrarisEditor.Utilities
 {
 
-    interface IUndoRedo
+    public interface IUndoRedo
     {
         string Name { get; }
         void Undo();
@@ -38,7 +38,7 @@ namespace FerrarisEditor.Utilities
             _redoAction = redo;
         }
     }
-    class UndoRedo
+    public class UndoRedo
     {
 
         private readonly ObservableCollection<IUndoRedo> _redoList = new ObservableCollection<IUndoRedo>();

@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:FerrarisEditor.Editors"
       xmlns:proj="clr-namespace:FerrarisEditor.GameProject"
-      mc:Ignorable="d" 
+      mc:Ignorable="d" Focusable="True"
       d:DataContext="{d:DesignInstance Type=proj:Project,IsDesignTimeCreatable=True}"
       d:DesignHeight="450" d:DesignWidth="800">
 
@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
         <Button Content="Add Scene" Width="95" VerticalAlignment="Center" Focusable="False"
                 Grid.Row="0" HorizontalAlignment="Left" Margin="20,0,0,0"
-                Command="{Binding AddScene}"/>
+                Command="{Binding AddSceneCommand}"/>
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
             <ItemsControl ItemsSource="{Binding Scenes}">
                 <ItemsControl.ItemsPanel>
@@ -33,7 +33,7 @@
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding Name}"/>
                                         <Button Content="Remove"
-                                            Command="{Binding DataContext.RemoveScene, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            Command="{Binding DataContext.RemoveSceneCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             CommandParameter="{Binding}" Margin="20,0" Focusable="False"/>
                                     </StackPanel>
                                     

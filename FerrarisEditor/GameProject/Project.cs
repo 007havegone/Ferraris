@@ -20,10 +20,10 @@ namespace FerrarisEditor.GameProject
         [DataMember]
         public string Name { get; private set; } = "New Project";
         [DataMember]
-        public string Path { get; private set; }
+        public string Path { get; private set; }// root of the all projects
 
 
-        public string FullPath => $"{Path}{Name}{Extension}";
+        public string FullPath => $@"{Path}{Name}\{Name}{Extension}";
         [DataMember(Name = "Scenes")] // xml name for scenes
         private ObservableCollection<Scene> _scenes = new ObservableCollection<Scene>();
         public ReadOnlyObservableCollection<Scene> Scenes
@@ -50,11 +50,12 @@ namespace FerrarisEditor.GameProject
 
         public static UndoRedo UndoRedo { get; } = new UndoRedo();
 
-        public ICommand Undo { get; private set; }
-        public ICommand Redo { get; private set; }
+        public ICommand UndoCommand { get; private set; }
+        public ICommand RedoCommand { get; private set; }
 
-        public ICommand AddScene { get; private set; }
-        public ICommand RemoveScene { get; private set; }
+        public ICommand AddSceneCommand { get; private set; }
+        public ICommand RemoveSceneCommand { get; private set; }
+        public ICommand SaveCommand { get; private set; }
 
         public void AddSceneInternal(string sceneName)
         {
@@ -97,7 +98,7 @@ namespace FerrarisEditor.GameProject
             ActiveScene = Scenes.FirstOrDefault(x => x.IsActive);
 
             // create the command
-            AddScene = new RelayCommand<Object>(x =>
+            AddSceneCommand = new RelayCommand<Object>(x =>
             {
                 AddSceneInternal($"New Scene {_scenes.Count}");
                 var newScene = _scenes.Last();
@@ -108,7 +109,7 @@ namespace FerrarisEditor.GameProject
                     $"Add {newScene.Name}"));
             });
 
-            RemoveScene = new RelayCommand<Scene>(x =>
+            RemoveSceneCommand = new RelayCommand<Scene>(x =>
             {
                 var sceneIndex = _scenes.IndexOf(x);
                 RemoveSceneInternal(x);
@@ -119,8 +120,9 @@ namespace FerrarisEditor.GameProject
                     $"Remove {x.Name}"));
             }, x=> !x.IsActive);
 
-            Undo = new RelayCommand<Object>(x => UndoRedo.Undo());
-            Redo = new RelayCommand<Object>(x => UndoRedo.Redo());
+            UndoCommand = new RelayCommand<Object>(x => UndoRedo.Undo());
+            RedoCommand = new RelayCommand<Object>(x => UndoRedo.Redo());
+            SaveCommand = new RelayCommand<Object>(x => Save(this));
         }
 
 

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:FerrarisEditor"
         xmlns:editors="clr-namespace:FerrarisEditor.Editors"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Title="Ferraris Editor" Height="1080" Width="1920">
+        Title="Ferraris Editor" Height="500" Width="1000">
     <Grid>
         <editors:WorldEditorView/>
     </Grid>

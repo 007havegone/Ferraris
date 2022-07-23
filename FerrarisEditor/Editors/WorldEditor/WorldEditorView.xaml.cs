@@ -1,5 +1,7 @@
-﻿using System;
+﻿using FerrarisEditor.GameProject;
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +32,9 @@ namespace FerrarisEditor.Editors
         {
             Loaded -= OnWorldEditorViewLoaded;
             Focus();
+            // Fixed focus lose bug.
+            // Sometime use the undo, need to get the focus
+            ((INotifyCollectionChanged)Project.UndoRedo.UndoList).CollectionChanged += (s, e) => Focus();
         }
     }
 }

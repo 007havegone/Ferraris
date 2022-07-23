@@ -23,6 +23,13 @@ namespace FerrarisEditor.GameProject
         public OpenProjectView()
         {
             InitializeComponent();
+
+            Loaded += (s, e) =>
+            {
+                // get the selected item from list box
+                var item = projectsListBox.ItemContainerGenerator.ContainerFromIndex(projectsListBox.SelectedIndex) as ListBoxItem;
+                item?.Focus();// if exist, focus the windows
+            };
         }
 
         private void OnOpen_Button_Click(object sender, RoutedEventArgs e)

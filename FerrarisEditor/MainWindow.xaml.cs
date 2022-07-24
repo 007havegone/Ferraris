@@ -28,18 +28,18 @@ namespace FerrarisEditor
             Loaded += OnMainWindowLoaded;
             Closing += OnMainWindowClosing;
         }
-
-        private void OnMainWindowClosing(object sender, CancelEventArgs e)
-        {
-            Closing -= OnMainWindowClosing;
-            OpenProjectBrowserDialog();
-        }
-
         private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnMainWindowLoaded;
             OpenProjectBrowserDialog();
         }
+
+        private void OnMainWindowClosing(object sender, CancelEventArgs e)
+        {
+            Closing -= OnMainWindowClosing;
+            Project.Current.Unload();
+        }
+
 
         private void OpenProjectBrowserDialog()
         {

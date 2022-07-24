@@ -175,8 +175,8 @@ namespace FerrarisEditor.GameProject
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                // TODO: log err
-                return string.Empty;
+                Logger.Log(MessageType.Error, $"Failed to create {ProjectName}");
+                throw;
             }
 
         }
@@ -204,7 +204,8 @@ namespace FerrarisEditor.GameProject
             catch(Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                // TODO: log err
+                Logger.Log(MessageType.Error, "Failed to read project templates");
+                throw;
             }
         }
     }

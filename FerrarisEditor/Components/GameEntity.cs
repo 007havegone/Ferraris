@@ -55,7 +55,7 @@ namespace FerrarisEditor.Components
         public ReadOnlyObservableCollection<Component> Components { get; private set; }
 
         public ICommand RenameCommand { get; private set; }
-        public ICommand EnableCommand { get; private set; }
+        public ICommand IsEnabledCommand { get; private set; }
 
         [OnDeserialized]
         void OnDeserialized(StreamingContext context)
@@ -74,6 +74,15 @@ namespace FerrarisEditor.Components
                 Project.UndoRedo.Add(new UndoRedoAction(nameof(Name), this, oldName, x,
                     $"Rename entity '{oldName}' to '{x}'"));
             }, x => x != _name);// oldname not equal new name
+
+            IsEnabledCommand = new RelayCommand<bool>(x =>
+            {
+                var oldValue = _isEnabled;
+                IsEnabled = x;
+
+                Project.UndoRedo.Add(new UndoRedoAction(nameof(IsEnabled), this,
+                    oldValue, x, x? $"Enable {Name}" :  $"Disable{Name}"));
+            });
         }
 
         public GameEntity(Scene scene)

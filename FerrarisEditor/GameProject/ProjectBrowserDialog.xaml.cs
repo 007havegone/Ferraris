@@ -22,6 +22,18 @@ namespace FerrarisEditor.GameProject
         public ProjectBrowserDialog()
         {
             InitializeComponent();
+            Loaded += OnProjectBrowserDialgoLoaded;
+        }
+
+        private void OnProjectBrowserDialgoLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnProjectBrowserDialgoLoaded;
+            if(!OpenProject.Projects.Any())// once empty project, automate goto create project UI
+            {
+                openProjectButton.IsEnabled = false;
+                openProjectView.Visibility = Visibility.Hidden;
+                OnTroggleButton_Click(createProjectButton, new RoutedEventArgs());
+            }
         }
 
         private void OnTroggleButton_Click(object sender, RoutedEventArgs e)

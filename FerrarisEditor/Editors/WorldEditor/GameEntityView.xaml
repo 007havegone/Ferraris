@@ -28,7 +28,8 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="Name" Grid.Column="0" Margin="5,0,0,0"/>
-            <TextBox Text="{Binding Name}" Grid.Column="1"/>
+            <!--here use a tag, you can also define your own textBox with command property-->
+            <TextBox Text="{Binding Name}" Grid.Column="1" Tag="{Binding RenameCommand}"/>
             <StackPanel Orientation="Horizontal" Grid.Column="2">
                 <TextBlock Text="Enabled" Margin="5,0,0,0"/>
                 <CheckBox IsChecked="{Binding IsEnabled}" Margin="5,0" VerticalAlignment="Center"/>

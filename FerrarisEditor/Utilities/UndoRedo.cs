@@ -40,7 +40,7 @@ namespace FerrarisEditor.Utilities
     }
     public class UndoRedo
     {
-
+        private bool _enableAdd = true;
         private readonly ObservableCollection<IUndoRedo> _redoList = new ObservableCollection<IUndoRedo>();
         private readonly ObservableCollection<IUndoRedo> _undoList = new ObservableCollection<IUndoRedo>();
 
@@ -55,8 +55,11 @@ namespace FerrarisEditor.Utilities
 
         public void Add(IUndoRedo cmd)
         {
-            _undoList.Add(cmd);
-            _redoList.Clear();// once we have a new cmd, the redoList must empty
+            if(_enableAdd)
+            {
+                _undoList.Add(cmd);
+                _redoList.Clear();// once we have a new cmd, the redoList must empty
+            }
         }
 
         public void Undo()
@@ -65,7 +68,9 @@ namespace FerrarisEditor.Utilities
             {
                 var cmd = _undoList.Last();
                 _undoList.RemoveAt(_undoList.Count - 1);
+                _enableAdd = false;
                 cmd.Undo();
+                _enableAdd = true;
                 _redoList.Insert(0, cmd);
             }
         }
@@ -76,7 +81,9 @@ namespace FerrarisEditor.Utilities
             {
                 var cmd = _redoList.First();
                 _redoList.RemoveAt(0);
+                _enableAdd = false;
                 cmd.Redo();
+                _enableAdd = true;
                 _undoList.Add(cmd);
             }
         }

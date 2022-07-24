@@ -37,7 +37,24 @@ namespace FerrarisEditor.Utilities
             _undoAction = undo;
             _redoAction = redo;
         }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UndoRedoAction"/> class.
+        /// </summary>
+        /// <param name="property">The property in GameEntity</param>
+        /// <param name="instance">instance of GameEntity</param>
+        /// <param name="undoValue">The old value.</param>
+        /// <param name="redoValue">The new value.</param>
+        /// <param name="name">The Action name</param>
+        public UndoRedoAction(string property, object instance, object undoValue, object redoValue, string name)
+            : this(
+                () => instance.GetType().GetProperty(property).SetValue(instance, undoValue),// use reflection to get the type of GameEntity
+                () => instance.GetType().GetProperty(property).SetValue(instance, redoValue),
+                name)
+        { }
     }
+        
+
+
     public class UndoRedo
     {
         private bool _enableAdd = true;

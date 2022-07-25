@@ -59,7 +59,7 @@ namespace FerrarisEditor.Utilities
             }));
         }
 
-        public static async void clear()
+        public static async void Clear()
         {
             await Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {

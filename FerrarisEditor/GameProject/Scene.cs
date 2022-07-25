@@ -13,7 +13,7 @@ using System.Windows.Input;
 namespace FerrarisEditor.GameProject
 {
     [DataContract]
-    public class Scene : ViewModelBase
+    class Scene : ViewModelBase
     {
         private string _name;// scene name
         [DataMember]

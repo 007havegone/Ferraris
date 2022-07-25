@@ -12,7 +12,7 @@ using System.Windows.Input;
 namespace FerrarisEditor.GameProject
 {
     [DataContract(Name ="Game")] // xml name
-    public class Project: ViewModelBase
+    class Project: ViewModelBase
     {
 
         public static string Extension { get; } = ".ferraris";

@@ -42,7 +42,7 @@ namespace FerrarisEditor.Utilities
     static class Logger
     {
         private static int _messageFilter = (int)(MessageType.Info | MessageType.Error | MessageType.Warning);
-        private static ObservableCollection<LoggerMessage> _message = new ObservableCollection<LoggerMessage>();
+        private static readonly ObservableCollection<LoggerMessage> _message = new ObservableCollection<LoggerMessage>();
         public static ReadOnlyObservableCollection<LoggerMessage> Messages
         { get; } = new ReadOnlyObservableCollection<LoggerMessage>(_message);
         public static CollectionViewSource FilteredMessages

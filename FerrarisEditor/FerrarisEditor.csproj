@@ -86,6 +86,7 @@
     <Compile Include="Utilities\UndoRedoView.xaml.cs">
       <DependentUpon>UndoRedoView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\MathUtil.cs" />
     <Page Include="Dictionaries\ControlTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

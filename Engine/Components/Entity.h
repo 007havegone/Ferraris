@@ -3,6 +3,7 @@
 
 namespace ferraris {
 
+// using forward declare instead include .h file
 #define INIT_INFO(component) namespace component {struct init_info;}
 
 INIT_INFO(transform);

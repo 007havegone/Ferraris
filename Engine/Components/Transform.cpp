@@ -30,7 +30,7 @@ component create_transform(const init_info& info, game_entity::entity entity)
 		rotations.emplace_back(info.rotation);
 		scales.emplace_back(info.scale);
 	}
-
+	// the transform_id equal to entity id
 	return component(transform_id{ (id::id_type)entity.get_id() });
 }
 

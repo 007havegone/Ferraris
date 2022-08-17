@@ -13,7 +13,7 @@ constexpr u32 generation_bits{ 8 };
 constexpr u32 index_bits{ sizeof(id_type) * 8 - generation_bits };
 constexpr id_type index_mask{ (id_type{1} << index_bits) - 1 };
 constexpr id_type generation_mask{ (id_type{1} << generation_bits) - 1 };
-}// internal namespace
+}// internal namespace, only use in this file
 constexpr id_type invalid_id{ id_type(-1) };
 constexpr u32 min_delete_elements{ 1024 };
 

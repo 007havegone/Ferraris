@@ -30,8 +30,8 @@ entity create_game_entity(const entity_info& info)
 		id = entity_id{(id::id_type)generations.size()};
 		generations.push_back(0);
 
-		transforms.resize(generations.size());
-		generations.emplace_back();
+		// NOTE: we don't call resize(), so the number of memory allocations stays low
+		transforms.emplace_back();
 	}
 	const entity new_entity{ id };
 	const id::id_type index{ id::index(id) };
@@ -62,7 +62,7 @@ bool is_alive(entity e)
 	const entity_id id{ e.get_id() };
 	const id::id_type index{ id::index(id) };
 	assert(index < generations.size());
-	assert(generations[index] == id::generation(id));// need more precise
+	assert(generations[index] == id::generation(id));
 	return (generations[index] == id::generation(id) && transforms[index].is_valid());
 }
 

@@ -56,14 +56,23 @@ namespace FerrarisEditor.GameProject
 
         public ICommand AddGameEntityCommand { get; private set; }
         public ICommand RemoveGameEntityCommand { get; private set; }
-        private void AddGameEnitity(GameEntity entity)
+        private void AddGameEnitity(GameEntity entity, int index = -1)
         {
             Debug.Assert(!_gameEntities.Contains(entity));
-            _gameEntities.Add(entity);
+            entity.IsActive = IsActive;
+            if(index == -1)// add new entity
+            {
+                _gameEntities.Add(entity);
+            }
+            else// undo action insert entity
+            {
+                _gameEntities.Insert(index, entity);
+            }
         }
         private void RemoveGameEnitity(GameEntity entity)
         {
             Debug.Assert(_gameEntities.Contains(entity));
+            entity.IsActive = false;
             _gameEntities.Remove(entity);
         }
         [OnDeserialized]// call this function after serialized done
@@ -74,6 +83,10 @@ namespace FerrarisEditor.GameProject
                 GameEntities = new ReadOnlyObservableCollection<GameEntity>(_gameEntities);
                 OnPropertyChanged(nameof(GameEntities));
             }
+            foreach (var entity in _gameEntities)
+            {
+                entity.IsActive = IsActive;
+            }
 
             // create the command
             AddGameEntityCommand = new RelayCommand<GameEntity>(x =>
@@ -82,8 +95,8 @@ namespace FerrarisEditor.GameProject
                 var entityIndex = _gameEntities.Count - 1;// insert into last place, why need index?
                 Project.UndoRedo.Add(new UndoRedoAction(
                     () => RemoveGameEnitity(x),
-                    () => _gameEntities.Insert(entityIndex, x),
-                    $"Add {x.Name} to {Name}"));
+                    () => AddGameEnitity(x, entityIndex),
+                    $"Add {x.Name} to {Name}")) ;
             });
 
             RemoveGameEntityCommand = new RelayCommand<GameEntity>(x =>
@@ -92,7 +105,7 @@ namespace FerrarisEditor.GameProject
                 RemoveGameEnitity(x);
 
                 Project.UndoRedo.Add(new UndoRedoAction(
-                    () => _gameEntities.Insert(entityIndex, x),
+                    () => AddGameEnitity(x, entityIndex),
                     () => RemoveGameEnitity(x),
                     $"Remove {x.Name}"));
             });

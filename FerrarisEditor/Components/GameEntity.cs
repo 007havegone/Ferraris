@@ -1,4 +1,5 @@
-﻿using FerrarisEditor.GameProject;
+﻿using FerrarisEditor.DllWarpper;
+using FerrarisEditor.GameProject;
 using FerrarisEditor.Utilities;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,44 @@ namespace FerrarisEditor.Components
     [KnownType(typeof(Transform))]
     class GameEntity : ViewModelBase
     {
+        public int _entityId = ID.INVALID_ID;
+        public int EntityId
+        {
+            get => _entityId;
+            set
+            {
+                if(_entityId != value)
+                {
+                    _entityId = value;
+                    OnPropertyChanged(nameof(EntityId));
+                }
+            }
+        }
+
+        public bool _isActive;
+        public bool IsActive
+        {
+            get => IsActive;
+            set
+            {
+                if(_isActive != value)
+                {
+                    _isActive = value;
+                    if(_isActive)
+                    {
+                        EntityId = EngineAPI.CreateGameEntity(this);
+                        Debug.Assert(ID.IsValid(_entityId));
+                    }
+                    else
+                    {
+                        EngineAPI.RemoveGameEntity(this);
+
+                    }
+                    OnPropertyChanged(nameof(IsActive));
+                }
+            }
+        }
+
         public bool _isEnabled = true;
         [DataMember]
         public bool IsEnabled
@@ -53,6 +92,11 @@ namespace FerrarisEditor.Components
         [DataMember(Name =nameof(Components))]
         private readonly ObservableCollection<Component> _components = new ObservableCollection<Component>();
         public ReadOnlyObservableCollection<Component> Components { get; private set; }
+
+        // get component for a certain type
+        public Component GetComponent(Type type) => Components.FirstOrDefault(c => c.GetType() == type);
+
+        public T GetComponent<T>() where T : Component => GetComponent(typeof(T)) as T;
 
         [OnDeserialized]
         void OnDeserialized(StreamingContext context)

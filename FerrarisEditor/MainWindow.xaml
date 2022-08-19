@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FerrarisEditor"
         xmlns:editors="clr-namespace:FerrarisEditor.Editors"
-        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d" WindowStartupLocation="CenterOwner"
         Title="Ferraris Editor" Height="1080" Width="1920"
         Style="{StaticResource FerrarisWindowStyle}">
     <Grid>

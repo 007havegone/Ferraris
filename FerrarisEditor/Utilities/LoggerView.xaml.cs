@@ -24,6 +24,7 @@ namespace FerrarisEditor.Utilities
         {
             InitializeComponent();
 
+            // Following only used for debug
             Loaded += (s, e) =>
             {
                 Logger.Log(MessageType.Info, "Information message");

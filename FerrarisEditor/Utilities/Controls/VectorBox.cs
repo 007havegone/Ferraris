@@ -36,12 +36,11 @@ namespace FerrarisEditor.Utilities.Controls
 
         public double Multiplier
         {
-            get => (double)GetValue(MultiperProperty);
-            set => SetValue(MultiperProperty, value);
+            get => (double)GetValue(MultiplierProperty);
+            set => SetValue(MultiplierProperty, value);
         }
-        public static readonly DependencyProperty MultiperProperty =
-            DependencyProperty.Register(nameof(Multiplier), typeof(double), typeof(VectorBox),
-                new PropertyMetadata(1.0));
+        public static readonly DependencyProperty MultiplierProperty =
+            DependencyProperty.Register(nameof(Multiplier), typeof(double), typeof(VectorBox), new PropertyMetadata(1.0));
 
         public string X
         {

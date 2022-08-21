@@ -21,10 +21,10 @@ namespace FerrarisEditor.Utilities.Controls
 
         public double Multiplier
         {
-            get => (double)GetValue(MultiperProperty);
-            set => SetValue(MultiperProperty, value);
+            get => (double)GetValue(MultiplierProperty);
+            set => SetValue(MultiplierProperty, value);
         }
-        public static readonly DependencyProperty MultiperProperty =
+        public static readonly DependencyProperty MultiplierProperty =
             DependencyProperty.Register(nameof(Multiplier), typeof(double), typeof(NumberBox),
                 new PropertyMetadata(1.0));
 

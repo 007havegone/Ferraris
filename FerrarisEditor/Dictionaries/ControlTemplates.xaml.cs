@@ -39,6 +39,44 @@ namespace FerrarisEditor.Dictionaries
 
         }
 
+        private void OnTextBoxRename_KeyDown(object sender, KeyEventArgs e)
+        {
+            // check for commands and keys
+            var textBox = sender as TextBox;
+            var exp = textBox.GetBindingExpression(TextBox.TextProperty);
+            if (exp == null) return;
+            if (e.Key == Key.Enter)
+            {
+                // command Tag is well define
+                if (textBox.Tag is ICommand command && command.CanExecute(textBox.Text))
+                {
+                    command.Execute(textBox.Text);// call command
+                }
+                else
+                {
+                    exp.UpdateSource();// only update without command
+                }
+                textBox.Visibility = Visibility.Collapsed;
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Escape)
+            {
+                exp.UpdateTarget();// rockback to the oldvalue
+                textBox.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void OnTextBoxRename_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            var exp = textBox.GetBindingExpression(TextBox.TextProperty);
+            if(exp != null)
+            {
+                exp.UpdateTarget();
+                textBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.Previous));
+                textBox.Visibility = Visibility.Collapsed;
+            }
+        }
         private void OnClock_Button_Clcik(object sender, RoutedEventArgs e)
         {
             var window = (Window)((FrameworkElement)sender).TemplatedParent;
@@ -57,5 +95,7 @@ namespace FerrarisEditor.Dictionaries
             var window = (Window)((FrameworkElement)sender).TemplatedParent;
             window.WindowState = WindowState.Minimized;
         }
+
+        
     }
 }

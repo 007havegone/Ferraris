@@ -153,56 +153,61 @@ namespace FerrarisEditor.Components
         private readonly ObservableCollection<IMSComponent> _components = new ObservableCollection<IMSComponent>();
         public ReadOnlyObservableCollection<IMSComponent> Components { get; }
 
+        public T GetMSComponent<T>() where T: IMSComponent
+        {
+            return (T)Components.FirstOrDefault(x => x.GetType() == typeof(T));
+        }
+
         public List<GameEntity> SelectedEntities { get; }
-        
+
+        private void MakeComponentList()
+        {
+            _components.Clear();
+            var firstEntity = SelectedEntities.FirstOrDefault();
+            if (firstEntity == null) return;
+
+            // consider each component in first entity
+            foreach(var component in firstEntity.Components)
+            {
+                var type = component.GetType();
+                if(!SelectedEntities.Skip(1).Any(entity => entity.GetComponent(type) == null))// if other entity contains same components
+                {
+                    Debug.Assert(Components.FirstOrDefault(x => GetType() == type) == null);// this type of compoent only add one time.
+                    _components.Add(component.GetMultiselectionComponent(this));
+                }
+            }
+
+        }
+
         /**
          * Following three method to get property from Entities
          */
-        public static float? GetMixedValues(List<GameEntity> entities, Func<GameEntity, float> getProperty)
+        public static float? GetMixedValue<T>(List<T> objects, Func<T, float> getProperty)
         {
-            var value = getProperty(entities.First());
-            foreach(var entity in entities.Skip(1))// all are same, return value, else return null
-            {
-                if(!value.IsTheSameAs(getProperty(entity)))
-                {
-                    return null;
-                }
-            }
-            return value;
+            var value = getProperty(objects.First());
+            return objects.Skip(1).Any(x => !getProperty(x).IsTheSameAs(value)) ? (float?)null : value;
         }
 
-        public static bool? GetMixedValue(List<GameEntity> entities, Func<GameEntity,bool> getProperty)
+        public static bool? GetMixedValue<T>(List<T> objects, Func<T,bool> getProperty)
         {
-            var value = getProperty(entities.First());
-            foreach (var entity in entities.Skip(1))// all are same, return value, else return null
-            {
-                if(value != getProperty(entity))
-                {
-                    return null;
-                }
-            }
-            return value;
+            var value = getProperty(objects.First());
+            return objects.Skip(1).Any(x => getProperty(x) != value) ? (bool ?)null : value;
         }
-        public static string GetMixedValue(List<GameEntity> entities, Func<GameEntity, string> getProperty)
+        public static string GetMixedValue<T>(List<T> objects, Func<T, string> getProperty)
         {
-            var value = getProperty(entities.First());
-            foreach (var entity in entities.Skip(1))// all are same, return value, else return null
-            {
-                if (value != getProperty(entity))
-                {
-                    return null;
-                }
-            }
-            return value;
+            var value = getProperty(objects.First());
+            return objects.Skip(1).Any(x => getProperty(x) != value) ? null : value;
         }
 
 
         public void Refresh()
         {
             _enableUpdate = false;
-            UpdateMSGameEntitiy();// momo007 later rename the method
+            UpdateMSGameEntitiy();
+            MakeComponentList();// get why entiies contain which types of components
             _enableUpdate = true;
         }
+
 
         /// <summary>
         /// Updates the Property by selected entity

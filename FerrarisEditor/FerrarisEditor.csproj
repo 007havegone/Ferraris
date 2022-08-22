@@ -66,11 +66,17 @@
       <DependentUpon>ControlTemplates.xaml</DependentUpon>
     </Compile>
     <Compile Include="DllWarpper\EngineAPI.cs" />
+    <Compile Include="Editors\WorldEditor\ComponentView.xaml.cs">
+      <DependentUpon>ComponentView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\WorldEditor\GameEntityView.xaml.cs">
       <DependentUpon>GameEntityView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editors\WorldEditor\ProjectLayoutView.xaml.cs">
       <DependentUpon>ProjectLayoutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\WorldEditor\TransformView.xaml.cs">
+      <DependentUpon>TransformView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editors\WorldEditor\WorldEditorView.xaml.cs">
       <DependentUpon>WorldEditorView.xaml</DependentUpon>
@@ -99,6 +105,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Editors\WorldEditor\ComponentView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Editors\WorldEditor\GameEntityView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -106,6 +116,10 @@
     <Page Include="Editors\WorldEditor\ProjectLayoutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\WorldEditor\TransformView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Editors\WorldEditor\WorldEditorView.xaml">
       <SubType>Designer</SubType>

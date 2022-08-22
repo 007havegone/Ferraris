@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -34,7 +35,8 @@ namespace FerrarisEditor.Editors
             (DataContext as MSTransform).PropertyChanged += (s, e) => _propertyChanged = true;
         }
 
-        private Action GetAction()
+        private Action GetAction(Func<Transform, (Transform transoform, Vector3)> selector,
+            Action<(Transform transform, Vector3)> forEachAction)
         {
             if (!(DataContext is MSTransform vm))
             {
@@ -42,37 +44,77 @@ namespace FerrarisEditor.Editors
                 _propertyChanged = false;
                 return null;
             }
-            var selection = vm.SelectedComponents.Select(transform => (transform, transform.Position)).ToList();
+            var selection = vm.SelectedComponents.Select(x => selector(x)).ToList();
             return new Action(() =>
             {
-                selection.ForEach(item => item.transform.Position = item.Position);
+                selection.ForEach(x => forEachAction(x));
                 (GameEntityView.Instance.DataContext as MSEntity)?.GetMSComponent<MSTransform>().Refresh();
             });
         }
-
-        private void OnPosition_VectorBox_PreviewMouse_LBD(object sender, MouseButtonEventArgs e)
-        {
-            _propertyChanged = false;
-            _undoAction = GetAction();
-        }
-
-        private void OnPosition_VectorBox_PreviewMouse_LBU(object sender, MouseButtonEventArgs e)
+        private void RecordAction(Action redoAction, string name)
         {
             if (_propertyChanged)
             {
                 Debug.Assert(_undoAction != null);
                 _propertyChanged = false;
-                var redoAction = GetAction();
-                Project.UndoRedo.Add(new UndoRedoAction(_undoAction, redoAction, "Position changed"));
+                Project.UndoRedo.Add(new UndoRedoAction(_undoAction, redoAction, name));
             }
-
         }
+
+        private Action GetPositionAction() => GetAction((x) => (x, x.Position), (x) => x.transform.Position = x.Item2);
+        private Action GetRotationAction() => GetAction((x) => (x, x.Rotation), (x) => x.transform.Rotation= x.Item2);
+        private Action GetScaleAction() => GetAction((x) => (x, x.Scale), (x) => x.transform.Scale = x.Item2);
+
+        private void OnPosition_VectorBox_PreviewMouse_LBD(object sender, MouseButtonEventArgs e)
+        {
+            _propertyChanged = false;
+            _undoAction = GetPositionAction();
+        }
+        private void OnPosition_VectorBox_PreviewMouse_LBU(object sender, MouseButtonEventArgs e)
+        {
+            RecordAction(GetPositionAction(), "Position changed");
+        }
+
+        private void OnRotation_VectorBox_PreviewMouse_LBD(object sender, MouseButtonEventArgs e)
+        {
+            _propertyChanged = false;
+            _undoAction = GetRotationAction();
+        }
+        private void OnRotation_VectorBox_PreviewMouse_LBU(object sender, MouseButtonEventArgs e)
+        {
+            RecordAction(GetRotationAction(), "Rotation changed");
+        }
+
+        private void OnScale_VectorBox_PreviewMouse_LBD(object sender, MouseButtonEventArgs e)
+        {
+            _propertyChanged = false;
+            _undoAction = GetScaleAction();
+        }
+        private void OnScale_VectorBox_PreviewMouse_LBU(object sender, MouseButtonEventArgs e)
+        {
+            RecordAction(GetScaleAction(), "Scale changed");
+        }
+
 
         private void OnPosition_VectorBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            if(_propertyChanged && _undoAction != null)
+            if (_propertyChanged && _undoAction != null)
             {
                 OnPosition_VectorBox_PreviewMouse_LBU(sender, null);
+            }
+        }
+        private void OnRotation_VectorBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (_propertyChanged && _undoAction != null)
+            {
+                OnRotation_VectorBox_PreviewMouse_LBU(sender, null);
+            }
+        }
+        private void OnScale_VectorBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if(_propertyChanged && _undoAction != null)
+            {
+                OnScale_VectorBox_PreviewMouse_LBU(sender, null);
             }
         }
     }

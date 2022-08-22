@@ -34,6 +34,7 @@ namespace FerrarisEditor.Editors
             Focus();
             // Fixed focus lose bug.
             // Sometime use the undo, need to get the focus
+            // however following is removed in course 15.
             ((INotifyCollectionChanged)Project.UndoRedo.UndoList).CollectionChanged += (s, e) => Focus();
         }
     }

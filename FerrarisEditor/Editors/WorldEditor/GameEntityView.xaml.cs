@@ -69,6 +69,7 @@ namespace FerrarisEditor.Editors
         private void OnName_TextBox_GotKeyBoardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             // use the entities changed name to create the undoAction
+            _propertyName = string.Empty;
             _undoAction = GetRenameAction();
         }
 

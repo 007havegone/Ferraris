@@ -42,6 +42,7 @@ struct game_entity_descriptor
 };
 }// anonymous namespace
 
+// maybe depreated
 game_entity::entity entity_from_id(id::id_type id)
 {
 	return game_entity::entity{ game_entity::entity_id{id} };
@@ -57,12 +58,12 @@ id::id_type CreateGameEntity(game_entity_descriptor* e)
 	{
 		&transform_info,
 	};
-	return game_entity::create_game_entity(entity_info).get_id();
+	return game_entity::create(entity_info).get_id();
 }
 
 EDITOR_INTERFACE
 void RemoveGameEntity(id::id_type id)
 {
 	assert(id::is_valid(id));
-	game_entity::remove_game_entity(entity_from_id(id));
+	game_entity::remove(game_entity::entity_id{ id });
 }

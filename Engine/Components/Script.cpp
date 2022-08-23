@@ -11,14 +11,14 @@ utl::vector<id::id_type>			id_mapping;// id -> index -> entity_scripts[id_mappin
 utl::vector<id::generation_type>	generations;// restore the generation part of id
 utl::deque<script_id>				free_ids;// restore the free id
 
-using script_registery = std::unordered_map<size_t, detail::script_creator>;
+using script_registry = std::unordered_map<size_t, detail::script_creator>;
 
-script_registery& registery()
+script_registry& registery()
 {
 	// NOTE: we put this static variable in a function because of
 	//		the initialization order of static data. This way, we can
 	//		be certain that the data is initialized before accessing it.
-	static script_registery reg;
+	static script_registry reg;
 	return reg;
 
 }
@@ -39,7 +39,7 @@ namespace detail {
 
 u8 register_script(size_t tag, script_creator func)
 {
-	bool result{ registery().insert(script_registery::value_type{tag, func}).second };
+	bool result{ registery().insert(script_registry::value_type{tag, func}).second };
 	assert(result);
 	return result;
 }

@@ -1,6 +1,9 @@
 #include "Transform.h"
 #include "Entity.h"
 
+// transform component id is special, which is the same as the entity id
+// in transform component, we don't concern about the remove, this job is doing in
+// entity implemnetation
 namespace ferraris::transform
 {
 namespace{
@@ -12,7 +15,7 @@ utl::vector<math::v3> scales;
 }
 
 
-component create_transform(const init_info& info, game_entity::entity entity)
+component create(const init_info& info, game_entity::entity entity)
 {
 	assert(entity.is_valid());
 	const id::id_type entity_index{ id::index(entity.get_id()) };
@@ -34,7 +37,7 @@ component create_transform(const init_info& info, game_entity::entity entity)
 	return component(transform_id{ (id::id_type)entity.get_id() });
 }
 
-void remove_transform(component c)
+void remove(component c)
 {
 	assert(c.is_valid());
 }

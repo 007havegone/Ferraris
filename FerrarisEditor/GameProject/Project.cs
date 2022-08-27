@@ -23,9 +23,9 @@ namespace FerrarisEditor.GameProject
         [DataMember]
         public string Path { get; private set; }// root of the all projects
 
-        public string FullPath => $@"{Path}{Name}\{Name}{Extension}";
+        public string FullPath => $@"{Path}{Name}{Extension}";// full path of .ferraris file
 
-        public string Solution => $@"{Path}{Name}\{Name}.sln";
+        public string Solution => $@"{Path}{Name}.sln";// full path of .sln file
 
         [DataMember(Name = "Scenes")] // xml name for scenes
         private ObservableCollection<Scene> _scenes = new ObservableCollection<Scene>();

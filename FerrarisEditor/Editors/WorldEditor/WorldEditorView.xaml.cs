@@ -1,4 +1,5 @@
-﻿using FerrarisEditor.GameProject;
+﻿using FerrarisEditor.GameDev;
+using FerrarisEditor.GameProject;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -36,6 +37,11 @@ namespace FerrarisEditor.Editors
             // Sometime use the undo, need to get the focus
             // however following is removed in course 15.
             ((INotifyCollectionChanged)Project.UndoRedo.UndoList).CollectionChanged += (s, e) => Focus();
+        }
+
+        private void OnNewScript_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new NewScriptDialog().ShowDialog();
         }
     }
 }

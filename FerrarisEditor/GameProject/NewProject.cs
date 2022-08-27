@@ -167,7 +167,7 @@ namespace FerrarisEditor.GameProject
                 //var project = new Project(ProjectName, path);
                 //Serializer.ToFile(project, path + $"{ProjectName}"+ Project.Extension);
                 var projectXml = File.ReadAllText(template.ProjectFilePath);
-                projectXml = string.Format(projectXml, ProjectName, ProjectPath);// fill the placeholder in the file
+                projectXml = string.Format(projectXml, ProjectName, path);// fill the placeholder in the file
                 var projectPath = Path.GetFullPath(Path.Combine(path, $"{ProjectName}{Project.Extension}"));
                 File.WriteAllText(projectPath, projectXml);// copy the project.ferraris file from default template
 
@@ -216,12 +216,12 @@ namespace FerrarisEditor.GameProject
                 {
                     // read the project configuration from the template.xml file
                     var template = Serializer.FromFile<ProjectTemplate>(file);
-                    template.IconFilePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(file), "icon.png"));
-                    template.Icon = File.ReadAllBytes(template.IconFilePath);
-                    template.ScreenshotFilePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(file), "Screenshot.png"));
-                    template.Screenshot = File.ReadAllBytes(template.ScreenshotFilePath);
-                    template.ProjectFilePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(file), template.ProjectFile)) ;
                     template.TemplatePath = Path.GetDirectoryName(file);
+                    template.IconFilePath = Path.GetFullPath(Path.Combine(template.TemplatePath, "icon.png"));
+                    template.Icon = File.ReadAllBytes(template.IconFilePath);
+                    template.ScreenshotFilePath = Path.GetFullPath(Path.Combine(template.TemplatePath, "Screenshot.png"));
+                    template.Screenshot = File.ReadAllBytes(template.ScreenshotFilePath);
+                    template.ProjectFilePath = Path.GetFullPath(Path.Combine(template.TemplatePath, template.ProjectFile)) ;
                     
                     _projectTemplates.Add(template);
                 }

@@ -1,4 +1,5 @@
-﻿using FerrarisEditor.Utilities;
+﻿using FerrarisEditor.GameDev;
+using FerrarisEditor.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,8 +23,10 @@ namespace FerrarisEditor.GameProject
         [DataMember]
         public string Path { get; private set; }// root of the all projects
 
-
         public string FullPath => $@"{Path}{Name}\{Name}{Extension}";
+
+        public string Solution => $@"{Path}{Name}\{Name}.sln";
+
         [DataMember(Name = "Scenes")] // xml name for scenes
         private ObservableCollection<Scene> _scenes = new ObservableCollection<Scene>();
         public ReadOnlyObservableCollection<Scene> Scenes
@@ -78,6 +81,7 @@ namespace FerrarisEditor.GameProject
 
         public void Unload()
         {
+            VisualStudio.CloseVisualStudio();
             UndoRedo.Reset();
         }
 

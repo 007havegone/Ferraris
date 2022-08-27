@@ -43,15 +43,15 @@ namespace FerrarisEditor.GameDev
                     while (monikerTable.Next(1, currentMoniker, IntPtr.Zero) == 0)
                     {
                         string name = string.Empty;
-                        currentMoniker[0].GetDisplayName(bindCtx, null, out name);
+                        currentMoniker[0]?.GetDisplayName(bindCtx, null, out name);
                         if(name.Contains(_progID))
                         {
                             hResult = rot.GetObject(currentMoniker[0], out object obj);
                             if (hResult < 0 || obj == null) throw new COMException($"Running object table's GetObject() returned HRESULT: {hResult:X8}");
 
                             EnvDTE80.DTE2 dte = obj as EnvDTE80.DTE2;
-                            var solutionName = dte.Solution.FileName;
-                            if(solutionName == dte.Solution.FullName)
+                            var solutionName = dte.Solution.FullName;
+                            if(solutionName == solutionPath)
                             {
                                 _vsInstance = dte;
                                 break;

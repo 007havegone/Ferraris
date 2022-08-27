@@ -23,7 +23,7 @@ namespace FerrarisEditor.GameDev
     /// </summary>
     public partial class NewScriptDialog : Window
     {
-        private static readonly string _cppCode = @"#include ""{0}.""
+        private static readonly string _cppCode = @"#include ""{0}.h""
 namespace {1} {{
 
 REGISTER_SCRIPT({0});

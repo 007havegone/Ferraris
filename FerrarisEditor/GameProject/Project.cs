@@ -12,8 +12,15 @@ using System.Windows.Input;
 
 namespace FerrarisEditor.GameProject
 {
-    [DataContract(Name ="Game")] // xml name
-    class Project: ViewModelBase
+    enum BuildConfiguration
+    {
+        Debug,
+        DebugEditor,
+        Release,
+        ReleaseEditor,
+    }
+    [DataContract(Name = "Game")] // xml name
+    class Project : ViewModelBase
     {
 
         public static string Extension { get; } = ".ferraris";
@@ -26,6 +33,27 @@ namespace FerrarisEditor.GameProject
         public string FullPath => $@"{Path}{Name}{Extension}";// full path of .ferraris file
 
         public string Solution => $@"{Path}{Name}.sln";// full path of .sln file
+
+        private static readonly string[] _buildConfigurationNames = new string[] { "Debug", "DebugEditor", "Release", "ReleaseEditor" };
+
+        // prop binding to Combo Box, only 0 or 1
+        private int _buildConfig;
+        [DataMember]
+        public int BuildConfig
+        {
+            get => _buildConfig;
+            set
+            {
+                if (_buildConfig != value)
+                {
+                    _buildConfig = value;
+                    OnPropertyChanged(nameof(BuildConfig));
+                }
+            }
+        }
+        // need extra two method to decide Editor or without Editor compile
+        public BuildConfiguration StandAloneBuildConfig => BuildConfig == 0 ? BuildConfiguration.Debug : BuildConfiguration.Release;
+        public BuildConfiguration DllBuildConfig => BuildConfig == 0 ? BuildConfiguration.DebugEditor : BuildConfiguration.ReleaseEditor;
 
         [DataMember(Name = "Scenes")] // xml name for scenes
         private ObservableCollection<Scene> _scenes = new ObservableCollection<Scene>();
@@ -41,7 +69,7 @@ namespace FerrarisEditor.GameProject
 
             set
             {
-                if(_activeScene != value)
+                if (_activeScene != value)
                 {
                     _activeScene = value;
                     OnPropertyChanged(nameof(ActiveScene));
@@ -59,6 +87,11 @@ namespace FerrarisEditor.GameProject
         public ICommand AddSceneCommand { get; private set; }
         public ICommand RemoveSceneCommand { get; private set; }
         public ICommand SaveCommand { get; private set; }
+
+        public ICommand BuildCommand { get; private set; }
+
+        // get the config name by enum type
+        private static string GetConfigurationName(BuildConfiguration config) => _buildConfigurationNames[(int)config];
 
         public void AddScene(string sceneName)
         {
@@ -91,11 +124,38 @@ namespace FerrarisEditor.GameProject
             Logger.Log(MessageType.Info, $"Project saved to {project.FullPath}");
         }
 
+        private void BuildGameCodeDll(bool showWindow = true)
+        {
+            try
+            {
+                UnloadGameCodeDll();
+                VisualStudio.BuildSolution(this, GetConfigurationName(DllBuildConfig), showWindow);// [Project proj, string buildConfigName]
+                if (VisualStudio.BuildSucceeded)
+                {
+                    LoadGameCodeDll();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
+        private void LoadGameCodeDll()
+        {
+
+        }
+
+        private void UnloadGameCodeDll()
+        {
+
+        }
 
         [OnDeserialized]// call this function after serialized done
         private void OnDeserialized(StreamingContext context)
         {
-            if(_scenes!=null)
+            if (_scenes != null)
             {
                 Scenes = new ReadOnlyObservableCollection<Scene>(_scenes);
                 OnPropertyChanged(nameof(Scenes));
@@ -123,11 +183,12 @@ namespace FerrarisEditor.GameProject
                     () => _scenes.Insert(sceneIndex, x),
                     () => RemoveScene(x),
                     $"Remove {x.Name}"));
-            }, x=> !x.IsActive);
+            }, x => !x.IsActive);
 
-            UndoCommand = new RelayCommand<Object>(x => UndoRedo.Undo());
-            RedoCommand = new RelayCommand<Object>(x => UndoRedo.Redo());
-            SaveCommand = new RelayCommand<Object>(x => Save(this));
+            UndoCommand = new RelayCommand<object>(x => UndoRedo.Undo(), x => UndoRedo.UndoList.Any());
+            RedoCommand = new RelayCommand<object>(x => UndoRedo.Redo(), x => UndoRedo.RedoList.Any());
+            SaveCommand = new RelayCommand<object>(x => Save(this));
+            BuildCommand = new RelayCommand<bool>(x => BuildGameCodeDll(x), x => !VisualStudio.IsDebugging() && VisualStudio.BuildDone);
         }
 
 

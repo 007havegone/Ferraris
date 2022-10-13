@@ -12,7 +12,7 @@
         <Border.Effect>
             <DropShadowEffect Opacity="0.6" BlurRadius="15" ShadowDepth="2"/>
         </Border.Effect>
-        <!-- The actual useful part -->
+
         <Grid Margin="32,0">
             <!-- Busy animation -->
             <Grid HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Hidden"
@@ -78,7 +78,7 @@
                     </TextBlock.Triggers>
                 </TextBlock>
             </Grid>
-            
+            <!-- The actual useful part -->
             <Grid>
                 <Grid.Style>
                     <Style TargetType="Grid">

@@ -191,6 +191,7 @@ namespace FerrarisEditor.GameDev
 
                     try
                     {
+                        // remove the redundant *.pdb files.
                         foreach (var pdbFile in Directory.GetFiles(Path.Combine($"{project.Path}", $@"x64\{configName}"), "*.pdb"))
                         {
                             File.Delete(pdbFile);

@@ -15,7 +15,7 @@ namespace FerrarisEditor
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static string FerrarisPath { get; private set; } = @"F:\Source\Repos\Ferraris";
+        public static string FerrarisPath { get; private set; } //  = @"F:\Source\Repos\Ferraris";
 
         public MainWindow()
         {

@@ -51,7 +51,7 @@ namespace FerrarisEditor.Editors
                 (GameEntityView.Instance.DataContext as MSEntity)?.GetMSComponent<MSTransform>().Refresh();
             });
         }
-        private void RecordAction(Action redoAction, string name)
+        private void RecordActions(Action redoAction, string name)
         {
             if (_propertyChanged)
             {
@@ -72,7 +72,7 @@ namespace FerrarisEditor.Editors
         }
         private void OnPosition_VectorBox_PreviewMouse_LBU(object sender, MouseButtonEventArgs e)
         {
-            RecordAction(GetPositionAction(), "Position changed");
+            RecordActions(GetPositionAction(), "Position changed");
         }
 
         private void OnRotation_VectorBox_PreviewMouse_LBD(object sender, MouseButtonEventArgs e)
@@ -82,7 +82,7 @@ namespace FerrarisEditor.Editors
         }
         private void OnRotation_VectorBox_PreviewMouse_LBU(object sender, MouseButtonEventArgs e)
         {
-            RecordAction(GetRotationAction(), "Rotation changed");
+            RecordActions(GetRotationAction(), "Rotation changed");
         }
 
         private void OnScale_VectorBox_PreviewMouse_LBD(object sender, MouseButtonEventArgs e)
@@ -92,7 +92,7 @@ namespace FerrarisEditor.Editors
         }
         private void OnScale_VectorBox_PreviewMouse_LBU(object sender, MouseButtonEventArgs e)
         {
-            RecordAction(GetScaleAction(), "Scale changed");
+            RecordActions(GetScaleAction(), "Scale changed");
         }
 
 

@@ -1,4 +1,5 @@
-﻿using FerrarisEditor.GameDev;
+﻿using FerrarisEditor.DllWarpper;
+using FerrarisEditor.GameDev;
 using FerrarisEditor.Utilities;
 using System;
 using System.Collections.Generic;
@@ -144,12 +145,24 @@ namespace FerrarisEditor.GameProject
 
         private void LoadGameCodeDll()
         {
-
+            var configName = GetConfigurationName(DllBuildConfig);
+            var dll = $@"{Path}x64\{configName}\{Name}.dll";
+            if (File.Exists(dll) && EngineAPI.LoadGameCodeDll(dll) != 0)
+            {
+                Logger.Log(MessageType.Info, "Game code DLL loaded successfully");
+            }
+            else
+            {
+                Logger.Log(MessageType.Warning, "Failed to load game code DLL file. Try to build the project first.");
+            }
         }
 
         private void UnloadGameCodeDll()
         {
-
+            if(EngineAPI.UnloadGameCodeDll() !=0)
+            {
+                Logger.Log(MessageType.Info, "Game code DLL unloaded.");
+            }
         }
 
         [OnDeserialized]// call this function after serialized done
@@ -162,8 +175,9 @@ namespace FerrarisEditor.GameProject
             }
             ActiveScene = Scenes.FirstOrDefault(x => x.IsActive);
 
+            BuildGameCodeDll(false);
             // create the command
-            AddSceneCommand = new RelayCommand<Object>(x =>
+            AddSceneCommand = new RelayCommand<Object>(x => 
             {
                 AddScene($"New Scene {_scenes.Count}");
                 var newScene = _scenes.Last();

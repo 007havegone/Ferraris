@@ -1,5 +1,9 @@
 ﻿using FerrarisEditor.Components;
 using FerrarisEditor.EngineAPIStructs;
+using FerrarisEditor.GameProject;
+using FerrarisEditor.Utilities;
+using System;
+using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 
@@ -14,9 +18,16 @@ namespace FerrarisEditor.EngineAPIStructs
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    class ScriptComponent
+    {
+        public IntPtr ScriptCreator;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     class GameEntityDescriptor
     {
         public TransformComponent Transform = new TransformComponent();
+        public ScriptComponent Script = new ScriptComponent();
     }
 }
 
@@ -31,6 +42,12 @@ namespace FerrarisEditor.DllWarpper
 
         [DllImport(_engineDll)]
         public static extern int UnloadGameCodeDll();
+
+        [DllImport(_engineDll)]
+        public static extern IntPtr GetScriptCreator(string name);
+        [DllImport(_engineDll)]
+        [return: MarshalAs(UnmanagedType.SafeArray)]
+        public static extern string[] GetScriptNames();
 
         internal static class EntityAPI
         {
@@ -48,6 +65,24 @@ namespace FerrarisEditor.DllWarpper
                     desc.Transform.Position = c.Position;
                     desc.Transform.Rotation = c.Rotation;
                     desc.Transform.Scale = c.Scale;
+                }
+                // script component
+                {
+                    // NOTE: here we also check if current project is not null, so we can tell whether the game code DLL
+                    //       has been loaded or not. This way, creation of entities with a script component is deffered
+                    //       untill the DLL has been loaded.
+                    var c = entity.GetComponent<Script>();
+                    if (c != null && Project.Current != null)
+                    {
+                        if (Project.Current.AvailableScripts.Contains(c.Name))
+                        {
+                            desc.Script.ScriptCreator = GetScriptCreator(c.Name);
+                        }
+                        else
+                        {
+                            Logger.Log(MessageType.Error, $"Unable to find script with name {c.Name}. Game entity will be created without script component!");
+                        }
+                    }
                 }
                 return CreateGameEntity(desc);
             }

@@ -163,7 +163,7 @@ namespace FerrarisEditor.GameDev
                 catch (Exception ex)
                 {
                     Debug.Write(ex.Message);
-                    if (!result) System.Threading.Thread.Sleep(1000);
+                    System.Threading.Thread.Sleep(1000);
                 }
             }
             return result;

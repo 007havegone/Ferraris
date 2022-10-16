@@ -1,4 +1,5 @@
-﻿using FerrarisEditor.DllWarpper;
+﻿using FerrarisEditor.Components;
+using FerrarisEditor.DllWarpper;
 using FerrarisEditor.GameDev;
 using FerrarisEditor.Utilities;
 using System;
@@ -56,6 +57,21 @@ namespace FerrarisEditor.GameProject
         // need extra two method to decide Editor or without Editor compile
         public BuildConfiguration StandAloneBuildConfig => BuildConfig == 0 ? BuildConfiguration.Debug : BuildConfiguration.Release;
         public BuildConfiguration DllBuildConfig => BuildConfig == 0 ? BuildConfiguration.DebugEditor : BuildConfiguration.ReleaseEditor;
+
+        private string[] _availabbleScripts;
+
+        public string[] AvailableScripts
+        {
+            get => _availabbleScripts;
+            set
+            {
+                if (_availabbleScripts != value)
+                {
+                    _availabbleScripts = value;
+                    OnPropertyChanged(nameof(AvailableScripts));
+                }
+            }
+        }
 
         [DataMember(Name = "Scenes")] // xml name for scenes
         private ObservableCollection<Scene> _scenes = new ObservableCollection<Scene>();
@@ -157,6 +173,7 @@ namespace FerrarisEditor.GameProject
 
         public void Unload()
         {
+            UnloadGameCodeDll();
             VisualStudio.CloseVisualStudio();
             UndoRedo.Reset();
         }
@@ -189,8 +206,11 @@ namespace FerrarisEditor.GameProject
         {
             var configName = GetConfigurationName(DllBuildConfig);
             var dll = $@"{Path}x64\{configName}\{Name}.dll";
+            AvailableScripts = null;
             if (File.Exists(dll) && EngineAPI.LoadGameCodeDll(dll) != 0)
             {
+                AvailableScripts = EngineAPI.GetScriptNames();
+                ActiveScene.GameEntities.Where(x => x.GetComponent<Script>() != null).ToList().ForEach(x => x.IsActive = true);
                 Logger.Log(MessageType.Info, "Game code DLL loaded successfully");
             }
             else
@@ -201,9 +221,11 @@ namespace FerrarisEditor.GameProject
 
         private void UnloadGameCodeDll()
         {
-            if(EngineAPI.UnloadGameCodeDll() !=0)
+            ActiveScene.GameEntities.Where(x => x.GetComponent<Script>() != null).ToList().ForEach(x => x.IsActive = false);
+            if (EngineAPI.UnloadGameCodeDll() !=0)
             {
                 Logger.Log(MessageType.Info, "Game code DLL unloaded.");
+                AvailableScripts = null;
             }
         }
 
@@ -216,7 +238,7 @@ namespace FerrarisEditor.GameProject
                 OnPropertyChanged(nameof(Scenes));
             }
             ActiveScene = Scenes.FirstOrDefault(x => x.IsActive);
-
+            Debug.Assert(ActiveScene != null);
             await BuildGameCodeDll(false);
             SetCommands();
         }

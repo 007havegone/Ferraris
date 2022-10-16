@@ -13,7 +13,8 @@ utl::deque<script_id>				free_ids;// restore the free id
 
 using script_registry = std::unordered_map<size_t, detail::script_creator>;
 
-script_registry& registery()
+script_registry&
+registery()
 {
 	// NOTE: we put this static variable in a function because of
 	//		the initialization order of static data. This way, we can
@@ -22,8 +23,20 @@ script_registry& registery()
 	return reg;
 
 }
+#ifdef USE_WITH_EDITOR
+utl::vector<std::string>&
+script_names()
+{
+	// NOTE: we put this static variable in a function because of
+	//		the initialization order of static data. This way, we can
+	//		be certain that the data is initialized before accessing it.
+	static utl::vector<std::string> names;
+	return names;
+}
+#endif
 
-bool exists(script_id id)
+bool
+exists(script_id id)
 {
 	assert(id::is_valid(id));
 	const id::id_type index{ id::index(id) };
@@ -37,15 +50,35 @@ bool exists(script_id id)
 
 namespace detail {
 
-u8 register_script(size_t tag, script_creator func)
+u8
+register_script(size_t tag, script_creator func)
 {
 	bool result{ registery().insert(script_registry::value_type{tag, func}).second };
 	assert(result);
 	return result;
 }
+
+script_creator
+get_script_creator(size_t tag)
+{
+	auto script = ferraris::script::registery().find(tag);
+	assert(script != ferraris::script::registery().end() && script->first == tag);
+	return script->second;
+}
+
+#ifdef USE_WITH_EDITOR
+u8
+add_script_name(const char* name)
+{
+	script_names().emplace_back(name);
+	return true;
+}
+#endif // USE_WITH_EDITOR
+
 }// namespace detail
 
-component create(const init_info& info, game_entity::entity entity)
+component
+create(const init_info& info, game_entity::entity entity)
 {
 	assert(entity.is_valid());
 	assert(info.script_creator);
@@ -73,7 +106,8 @@ component create(const init_info& info, game_entity::entity entity)
 	return component{ id };
 }
 
-void remove(component c)
+void
+remove(component c)
 {
 	assert(c.is_valid() && exists(c.get_id()));
 	const script_id id{ c.get_id() };
@@ -84,3 +118,22 @@ void remove(component c)
 	id_mapping[id::index(id)] = id::invalid_id;// point to the invalid
 }
 }
+
+#ifdef USE_WITH_EDITOR
+#include <atlsafe.h>
+
+extern "C" __declspec(dllexport)
+LPSAFEARRAY
+get_script_names()
+{
+	const u32 size{ (u32)ferraris::script::script_names().size() };
+	if (!size) return nullptr;
+	CComSafeArray<BSTR> names(size);
+	for (u32 i{ 0 }; i < size; ++i)
+	{
+		names.SetAt(i, A2BSTR_EX(ferraris::script::script_names()[i].c_str()), false);
+	}
+	return names.Detach();
+}
+
+#endif // USE_WITH_EDITOR

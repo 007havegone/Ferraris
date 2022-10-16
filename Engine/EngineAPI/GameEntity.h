@@ -41,6 +41,10 @@ using script_ptr = std::unique_ptr<entity_script>;
 using script_creator = script_ptr(*)(game_entity::entity entity);// define a pointer to the script create function
 using string_hash = std::hash<std::string>;
 u8 register_script(size_t, script_creator);
+#ifdef USE_WITH_EDITOR
+extern "C" __declspec(dllexport)
+#endif // USE_WITH_EDITOR
+script_creator get_script_creator(size_t tag);
 
 // script_class is a subclass of entity_script
 template<class script_class>
@@ -50,10 +54,20 @@ script_ptr create_script(game_entity::entity entity)
 	// create an instance of the script and return a pointer to the script
 	return std::make_unique<script_class>(entity);
 }
-
-// following call register_script() to regist the fucntion into GameEngine
+#ifdef USE_WITH_EDITOR
+u8 add_script_name(const char* name);
+// register_script() to regist the fucntion into GameEngine, add_script_name to Editor level.
 #define REGISTER_SCRIPT(TYPE)											\
-		class TYPE;														\
+		namespace {														\
+		const u8 _reg_##TYPE											\
+		{ ferraris::script::detail::register_script(					\
+				ferraris::script::detail::string_hash()(#TYPE),			\
+				&ferraris::script::detail::create_script<TYPE>) };		\
+		const u8 _name_##TYPE											\
+		{ ferraris::script::detail::add_script_name(#TYPE) };			\
+		}
+#else
+#define REGISTER_SCRIPT(TYPE)											\
 		namespace {														\
 		const u8 _reg_##TYPE											\
 		{ ferraris::script::detail::register_script(					\
@@ -61,6 +75,7 @@ script_ptr create_script(game_entity::entity entity)
 				&ferraris::script::detail::create_script<TYPE>) };		\
 		}
 
+#endif // USE_WITH_EDITOR
 
 }// namespace detail
 }// namespace script

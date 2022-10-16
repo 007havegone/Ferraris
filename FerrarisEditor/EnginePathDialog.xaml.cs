@@ -28,7 +28,7 @@ namespace FerrarisEditor
 
         private void OnOK_Button_Click(object sender, RoutedEventArgs e)
         {
-            var path = pathTextBox.Text;// get the text on textBlock
+            var path = pathTextBox.Text.Trim();// get the text on textBlock
             messageTextBlock.Text = string.Empty;
             if(string.IsNullOrEmpty(path))
             {
@@ -38,7 +38,7 @@ namespace FerrarisEditor
             {
                 messageTextBlock.Text = "Invalid character(s) used in path.";
             }
-            else if(!Directory.Exists(Path.Combine(path, @"Engine\EngineAPI")))
+            else if(!Directory.Exists(Path.Combine(path, @"Engine\EngineAPI\")))
             {
                 messageTextBlock.Text = "Unable to find the engine at the specified location.";
             }

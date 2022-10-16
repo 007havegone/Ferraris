@@ -188,7 +188,7 @@ namespace FerrarisEditor.GameProject
             Debug.Assert(File.Exists(Path.Combine(template.TemplatePath, "MSVCSolution")));
             Debug.Assert(File.Exists(Path.Combine(template.TemplatePath, "MSVCProject")));
 
-            var engineAPIPath = Path.Combine(MainWindow. FerrarisPath, @"Engine\EngineAPI");
+            var engineAPIPath = Path.Combine(MainWindow. FerrarisPath, @"Engine\EngineAPI\");
             Debug.Assert(Directory.Exists(engineAPIPath));
 
             var _0 = ProjectName;

@@ -81,7 +81,7 @@
                                     </Style>
                                 </TextBlock.Style>
                             </TextBlock>
-                            <TextBlock Text="{Binding Message}" TextWrapping="Wrap" Style="{StaticResource LightTextBlockKey}"/>
+                            <TextBlock Text="{Binding Message}" TextWrapping="Wrap" Style="{StaticResource LightTextBlockStyle}"/>
 
                         </DockPanel>
                     </DataTemplate>

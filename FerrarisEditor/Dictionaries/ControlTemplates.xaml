@@ -4,7 +4,7 @@
                     xmlns:local="clr-namespace:FerrarisEditor.Dictionaries"
                     xmlns:utl="clr-namespace:FerrarisEditor.Utilities.Controls">
 
-    <Style TargetType="{x:Type TextBlock}" x:Key="LightTextBlockKey">
+    <Style TargetType="{x:Type TextBlock}" x:Key="LightTextBlockStyle">
         <Setter Property="Foreground" Value="{StaticResource Editor.FontBrush}"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>

@@ -11,7 +11,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     
     <UserControl.Resources>
-        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource LightTextBlockKey}"/>
+        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource LightTextBlockStyle}"/>
     </UserControl.Resources>
     
     <local:ComponentView Header="Transform">

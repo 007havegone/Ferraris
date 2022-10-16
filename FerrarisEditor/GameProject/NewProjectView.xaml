@@ -39,13 +39,13 @@
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" 
                         Margin="0,30,0,0">
-                <TextBlock Text="Name" Width="50" Style="{StaticResource LightTextBlockKey}"/>
+                <TextBlock Text="Name" Width="50" Style="{StaticResource LightTextBlockStyle}"/>
                 <TextBox Width="550" Text="{Binding ProjectName, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" 
                         Margin="0,5,0,0">
-                <TextBlock Text="Path" Width="50" Style="{StaticResource LightTextBlockKey}"/>
+                <TextBlock Text="Path" Width="50" Style="{StaticResource LightTextBlockStyle}"/>
                 <TextBox Width="500" Text="{Binding ProjectPath, UpdateSourceTrigger=PropertyChanged}"/>
                 <Button Content="Browse" Width="45" Margin="0,0,5,0"/>
             </StackPanel>

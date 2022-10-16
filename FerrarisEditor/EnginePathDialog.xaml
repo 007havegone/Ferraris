@@ -17,7 +17,7 @@
                        Margin="0,10,0,0" TextWrapping="Wrap" x:Name="messageTextBlock"/>
 
             <DockPanel>
-                <TextBlock Text="Engine Path" Width="72" Style="{StaticResource LightTextBlockKey}"/>
+                <TextBlock Text="Engine Path" Width="72" Style="{StaticResource LightTextBlockStyle}"/>
                 <TextBox x:Name="pathTextBox"/>
             </DockPanel>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom"

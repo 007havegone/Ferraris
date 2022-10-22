@@ -191,12 +191,33 @@ namespace FerrarisEditor.GameProject
             Serializer.ToFile(project, project.FullPath);
             Logger.Log(MessageType.Info, $"Project saved to {project.FullPath}");
         }
+        private void SaveToBinary()
+        {
+            var configName = GetConfigurationName(StandAloneBuildConfig);
+            var bin = $@"{Path}x64\{configName}\game.bin";
+
+            using (var bw = new BinaryWriter(File.Open(bin, FileMode.Create, FileAccess.Write)))
+            {
+                bw.Write(ActiveScene.GameEntities.Count);
+                foreach(var entity in ActiveScene.GameEntities)
+                {
+                    bw.Write(0); // entity type (reserved for latter)
+                    bw.Write(entity.Components.Count);
+                    foreach(var component in entity.Components)
+                    {
+                        bw.Write((int)component.ToEnumType());
+                        component.WriteToBinary(bw);
+                    }
+                }
+            }
+        }
         private async Task RunGame(bool debug)
         {
             var configName = GetConfigurationName(StandAloneBuildConfig);
             await Task.Run(() => VisualStudio.BuildSolution(this, configName, debug));
             if(VisualStudio.BuildSucceeded)
             {
+                SaveToBinary();
                 await Task.Run(() => VisualStudio.Run(this, configName, debug));
             }
         }

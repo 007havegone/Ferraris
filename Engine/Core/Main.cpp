@@ -34,7 +34,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     engine_shutdown();
     return 0;
 }
-#endif // ! USE_WITH_EDITOR
+#endif // !USE_WITH_EDITOR
 
 
-#endif // _WIN64
+#endif // !_WIN64

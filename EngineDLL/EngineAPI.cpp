@@ -78,7 +78,7 @@ RemoveRenderSurface(u32 id)
 {
 	assert(id < surfaces.size());
 	platform::remove_window(surfaces[id].window.get_id());
-	surfaces.erase(surfaces.begin() + id);
+	// here do not need to remove from surfaces, we put it into the free-list container.
 }
 
 EDITOR_INTERFACE HWND

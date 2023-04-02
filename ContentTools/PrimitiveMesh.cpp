@@ -144,6 +144,8 @@ CreatePrimitiveMesh(scene_data* data, primitive_init_info* info)
 	assert(info->type < primitive_mesh_type::count);
 	scene scene{}; 
 	creators[info->type](scene, *info);
+	process_scene(scene, data->settings);
+	pack_data(scene, *data);
 }
 
 }

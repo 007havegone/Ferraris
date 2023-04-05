@@ -34,7 +34,13 @@ recalculate_normals(mesh& m)
 		m.normals[i - 2] = m.normals[i];
 	}
 }
+/**
+*	Split the vertex to have hard or soft edges.
+		1. Hard-edge, a vertex have several normal(per triangle), angle(n1 n2) > smoothing_angle
+		2. Soft-edge, a vertex have one normal edge, angle(n1,n2) < smoothing_angle 
+		We can compare their cosins.
 
+*/
 void
 process_normals(mesh& m, f32 smothing_angle)
 {
@@ -54,7 +60,7 @@ process_normals(mesh& m, f32 smothing_angle)
 
 	for (u32 i{ 0 }; i < num_vertices; ++i)
 	{
-		auto& refs{ idx_ref[i] };
+		auto& refs{ idx_ref[i] }; // consider which refer this vertex
 		u32 num_refs{ (u32)refs.size() };
 		for (u32 j{ 0 }; j < num_refs; ++j)
 		{
@@ -65,6 +71,7 @@ process_normals(mesh& m, f32 smothing_angle)
 			XMVECTOR n1{ XMLoadFloat3(&m.normals[refs[j]]) };
 			if (!is_hard_edge)
 			{
+				// compute a soft normal
 				for (u32 k{ j + 1 }; k < num_refs; ++k)
 				{
 					// this value represent the cosine of the angle between normals.
@@ -88,11 +95,17 @@ process_normals(mesh& m, f32 smothing_angle)
 					}
 				}
 			}
+			// hard-edge, one normal for per vertex
 			XMStoreFloat3(&v.normal, XMVector3Normalize(n1));
 		}
 	}
 		
 }
+/**
+	Vertex processor conditions:
+		1. Vertex are unique (except to coerce hard edges)
+		2. Normals and USs are per triangle vertex
+*/
 void
 process_vertices(mesh& m, const geometry_import_settings& settings)
 {

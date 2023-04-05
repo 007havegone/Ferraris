@@ -3,8 +3,8 @@
 
 #ifdef _WIN64
 
-#ifndef WIN32_MEAN_AND_LEAN
-#define WIN32_MEAN_AND_LEAN
+#ifndef WIN32_LEAN_MEAN_AND
+#define WIN32_LEAN_MEAN_AND
 #endif
 #include <Windows.h>
 

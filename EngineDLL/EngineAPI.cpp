@@ -8,8 +8,8 @@
 /* following define remove the useless define include into this file,
  * increase the compile speed.
  */ 
-#ifndef WIN32_MEAN_AND_LEAN
-#define WIN32_MEAN_AND_LEAN
+#ifndef WIN32_LEAN_MEAN_AND
+#define WIN32_LEAN_MEAN_AND
 #endif
 
 #include <Windows.h> // load dll by win32 function

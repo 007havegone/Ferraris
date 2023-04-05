@@ -44,7 +44,8 @@ recalculate_normals(mesh& m)
 void
 process_normals(mesh& m, f32 smothing_angle)
 {
-	const f32 cos_angle{ XMScalarCos(pi - smothing_angle * pi / 180.f) };
+	// smoothing_angle is angle between the plane, here we convert to the angle between normal.
+	const f32 cos_alpha{ XMScalarCos(pi - smothing_angle * pi / 180.f) };
 	const bool is_hard_edge{ XMScalarNearEqual(smothing_angle, 180.f, epsilon) };
 	const bool is_soft_edge{ XMScalarNearEqual(smothing_angle, 0.f, epsilon) };
 	const u32 num_indices{ (u32)m.raw_indices.size() };
@@ -75,16 +76,17 @@ process_normals(mesh& m, f32 smothing_angle)
 				for (u32 k{ j + 1 }; k < num_refs; ++k)
 				{
 					// this value represent the cosine of the angle between normals.
-					f32 n{ 0.f };
+					f32 cos_theta{ 0.f };
 					XMVECTOR n2{ XMLoadFloat3(&m.normals[refs[k]]) };
 					if (!is_soft_edge)
 					{
 						// NOTE: we're accounting for the length of n1 is this calculation because
 						//		 it can possibly change in this loop iteration. We assume unit length
 						//		 for n2.
-						XMStoreFloat(&n, XMVector3Dot(n1, n2) * XMVector3ReciprocalLength(n1));
+						//		cos(angle) = dot(n1, n2) / ( ||n1|| * ||n2||)
+						XMStoreFloat(&cos_theta, XMVector3Dot(n1, n2) * XMVector3ReciprocalLength(n1));
 					}
-					if (is_soft_edge || n > cos_angle)
+					if (is_soft_edge || cos_theta > cos_alpha)
 					{
 						n1 += n2;
 

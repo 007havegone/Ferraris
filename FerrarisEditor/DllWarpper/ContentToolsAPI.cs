@@ -1,6 +1,8 @@
 ﻿using FerrarisEditor.ContentToolsAPIStructs;
+using FerrarisEditor.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -21,11 +23,21 @@ namespace FerrarisEditor.ContentToolsAPIStructs
         public byte ImportAnimation = 1;
     }
     [StructLayout(LayoutKind.Sequential)]
-    class SceneData
+    class SceneData : IDisposable
     {
-        public IntPtr Buffer;
-        public int BufferSize;
+        public IntPtr Data;
+        public int DataSize;
         public GeometryImportSettings ImportSettings = new GeometryImportSettings();
+
+        public void Dispose()
+        {
+            Marshal.FreeCoTaskMem(Data); // free the memory which we allocated in pack_data(C++) 
+            GC.SuppressFinalize(this);
+        }
+        ~SceneData()
+        {
+            Dispose();
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -49,5 +61,25 @@ namespace FerrarisEditor.DllWarpper
 
         [DllImport(_toolsDll)]
         private static extern void CreatePrimitiveMesh([In, Out] SceneData data, PrimitiveInitInfo info);
+
+        public static void CreatePrimitiveMesh(Content.Geometry geometry, PrimitiveInitInfo info)
+        {
+            Debug.Assert(geometry != null);
+            // use  the using that make sure the dispose will call when throw exception
+            using var sceneData = new SceneData();
+            try
+            {
+                CreatePrimitiveMesh(sceneData, info);
+                Debug.Assert(sceneData.Data != IntPtr.Zero && sceneData.DataSize > 0);
+                var data = new byte[sceneData.DataSize];
+                Marshal.Copy(sceneData.Data, data, 0, sceneData.DataSize);
+                geometry.FromRawData(data);
+            }
+            catch(Exception ex)
+            {
+                Logger.Log(MessageType.Error, $"failed to create {info.Type} primitive mesh");
+                Debug.WriteLine(ex.Message);
+            }
+        }
     }
 }

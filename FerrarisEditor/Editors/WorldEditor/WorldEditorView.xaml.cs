@@ -1,4 +1,5 @@
-﻿using FerrarisEditor.GameDev;
+﻿using FerrarisEditor.Content;
+using FerrarisEditor.GameDev;
 using FerrarisEditor.GameProject;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,12 @@ namespace FerrarisEditor.Editors
         private void OnNewScript_Button_Click(object sender, RoutedEventArgs e)
         {
             var dlg = new NewScriptDialog().ShowDialog();
+        }
+
+        private void OnCreatePrimitiveMesh_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new PrimitiveMeshDialog();
+            dlg.ShowDialog();
         }
     }
 }

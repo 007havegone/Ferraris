@@ -1,5 +1,6 @@
 ﻿using FerrarisEditor.ContentToolsAPIStructs;
 using FerrarisEditor.DllWarpper;
+using FerrarisEditor.Editors;
 using FerrarisEditor.Utilities.Controls;
 using System;
 using System.Collections.Generic;
@@ -63,6 +64,9 @@ namespace FerrarisEditor.Content
             }
             var geometry = new Geometry();
             ContentToolsAPI.CreatePrimitiveMesh(geometry, info);
+            // sending the create geometry asset to the GeometryEditor for processing
+            (DataContext as GeometryEditor).SetAsset(geometry);
+
         }
 
         public PrimitiveMeshDialog()

@@ -91,6 +91,8 @@
     </Compile>
     <Compile Include="DllWarpper\ContentToolsAPI.cs" />
     <Compile Include="DllWarpper\EngineAPI.cs" />
+    <Compile Include="Editors\GeometryEditor\GeometryEditor.cs" />
+    <Compile Include="Editors\IAssetEditor.cs" />
     <Compile Include="Editors\WorldEditor\ComponentView.xaml.cs">
       <DependentUpon>ComponentView.xaml</DependentUpon>
     </Compile>

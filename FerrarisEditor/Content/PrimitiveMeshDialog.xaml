@@ -6,12 +6,18 @@
         xmlns:local="clr-namespace:FerrarisEditor.Content"
         xmlns:utl="clr-namespace:FerrarisEditor.Utilities.Controls"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:ed="clr-namespace:FerrarisEditor.Editors"
         mc:Ignorable="d" ResizeMode="NoResize"
         Foreground="{StaticResource Editor.FontBrush}"
         WindowStartupLocation="CenterScreen"
         UseLayoutRounding="True"
         Title="PrimitiveMeshDialog" Height="600" Width="800"
         Style="{StaticResource FerrarisDialogStyle}">
+    
+    <!--add the DataContext for the Geometry-->
+    <Window.DataContext>
+        <ed:GeometryEditor/>
+    </Window.DataContext>
     <!--Define the data provide for convert Enum to the item in the ComboBox-->
     <Window.Resources>
         <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">

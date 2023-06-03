@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace FerrarisEditor.Content
 {
+    // Different Primitive type
     enum PrimitiveMeshType
     {
         Plane,
@@ -20,6 +21,7 @@ namespace FerrarisEditor.Content
         Capsule,
         Count
     }
+    // The Mesh contains the vertext info for rendering
     class Mesh : ViewModelBase
     {
         private int _vertexSize;
@@ -84,6 +86,7 @@ namespace FerrarisEditor.Content
         public byte[] Vertices { get; set; }
         public byte[] Indices { get; set; }
     }
+    // MeshLOD contains several meshes
     class MeshLOD : ViewModelBase
     {
         private string _name;
@@ -102,7 +105,7 @@ namespace FerrarisEditor.Content
 
         private float _lodThreshold;
 
-        public float LodThreshod
+        public float LodThreshold
         {
             get => _lodThreshold;
             set
@@ -110,7 +113,7 @@ namespace FerrarisEditor.Content
                 if(_lodThreshold != value)
                 {
                     _lodThreshold = value;
-                    OnPropertyChanged(nameof(LodThreshod));
+                    OnPropertyChanged(nameof(LodThreshold));
                 }
             }
         }
@@ -118,6 +121,7 @@ namespace FerrarisEditor.Content
         public ObservableCollection<Mesh> Meshes { get; } = new ObservableCollection<Mesh>();
     }
 
+    // The LOG Group contains several Mesh LOD.
     class LODGroup : ViewModelBase
     {
         private string _name;
@@ -135,6 +139,7 @@ namespace FerrarisEditor.Content
         }
         public ObservableCollection<MeshLOD> LODs { get; } = new ObservableCollection<MeshLOD>();
     }
+    // As a geometry, it contains different lod of mesh.
     class Geometry : Asset
     {
         private readonly List<LODGroup> _lodGroups = new List<LODGroup>();
@@ -233,7 +238,7 @@ namespace FerrarisEditor.Content
             else
             {
                 lodIds.Add(lodId);
-                lod = new MeshLOD() { Name = meshName, LodThreshod = lodThreshold };
+                lod = new MeshLOD() { Name = meshName, LodThreshold = lodThreshold };
                 lodList.Add(lod);
             }
 

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FerrarisEditor.Content"
+        xmlns:utl="clr-namespace:FerrarisEditor.Utilities.Controls"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d" ResizeMode="NoResize"
         Foreground="{StaticResource Editor.FontBrush}"
@@ -11,7 +12,7 @@
         UseLayoutRounding="True"
         Title="PrimitiveMeshDialog" Height="600" Width="800"
         Style="{StaticResource FerrarisDialogStyle}">
-
+    <!--Define the data provide for convert Enum to the item in the ComboBox-->
     <Window.Resources>
         <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
@@ -34,6 +35,76 @@
                           SelectionChanged="OnPrimitiveType_ComboBox_SelectionChanged"/>
             </StackPanel>
         </Border>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="100" MaxWidth="200"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <!-- Plane Settings-->
+            <StackPanel Background="{StaticResource Editor.Window.GrayBrush3}">
+                <StackPanel.Style>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <!--The Panel is Default is collapsed-->
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <!--update visibility according to SelectedItem is Plane-->
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedItem,ElementName=primTypeComboBox}"
+                                         Value="{x:Static local:PrimitiveMeshType.Plane}">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <Grid Margin="0,5">
+                    <!--The slider control in DockPanel-->
+                    <Border CornerRadius="3" BorderThickness="1" BorderBrush="{StaticResource Editor.Window.GrayBrush6}" Margin="5">
+                        <StackPanel Margin="5,15,5,5">
+                            <DockPanel Margin="5">
+                                <TextBlock Text="Width" Width="40" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Path=Value, ElementName=xSliderPlane}" Width="30" DockPanel.Dock="Right"/>
+                                <!--The TextBlock value binding to the Slider-->
+                                <Slider MinHeight="1" Maximum="10" HorizontalAlignment="Stretch" Interval="1" IsSnapToTickEnabled="True"
+                                        TickPlacement="BottomRight" x:Name="xSliderPlane" ValueChanged="OnSlider_ValueChanged"/>
+                            </DockPanel>
+                            <DockPanel Margin="5">
+                                <TextBlock Text="Width" Width="40" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding Path=Value, ElementName=zSliderPlane}" Width="30" DockPanel.Dock="Right"/>
+                                <!--The TextBlock value binding to the Slider-->
+                                <Slider MinHeight="1" Maximum="10" HorizontalAlignment="Stretch" Interval="1" IsSnapToTickEnabled="True"
+                                        TickPlacement="BottomRight" x:Name="zSliderPlane" ValueChanged="OnSlider_ValueChanged"/>
+                            </DockPanel>
+                        </StackPanel>
+                    </Border>
+                    <Label Content="Segments" Background="{StaticResource Editor.Window.GrayBrush3}" VerticalAlignment="Top" 
+                           HorizontalAlignment="Left" Margin="20,-3,0,0" Foreground="{StaticResource Editor.FontBrush}"/>
+                </Grid>
+
+                <Grid Margin="0,5">
+                    <!--The slider control in DockPanel-->
+                    <Border CornerRadius="3" BorderThickness="1" BorderBrush="{StaticResource Editor.Window.GrayBrush6}" Margin="5">
+                        <StackPanel Margin="5,15,5,5">
+                            <DockPanel Margin="5">
+                                <TextBlock Text="Width" Width="40" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                                <utl:ScalarBox x:Name="widthScalarBoxPlane" Value="1" ValueChanged="OnScalarBox_ValueChanged"/>
+                            </DockPanel>
+                            <DockPanel Margin="5">
+                                <TextBlock Text="Length" Width="40" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                                <utl:ScalarBox x:Name="lengthScalarBoxPlane" Value="1" ValueChanged="OnScalarBox_ValueChanged"/>
+                            </DockPanel>
+                        </StackPanel>
+                    </Border>
+                    <Label Content="Segments" Background="{StaticResource Editor.Window.GrayBrush3}" VerticalAlignment="Top" 
+                           HorizontalAlignment="Left" Margin="20,-3,0,0" Foreground="{StaticResource Editor.FontBrush}"/>
+                </Grid>
+
+                <Button Content="Save" Width="96" Margin="5,0"/>
+            </StackPanel>
+                <!-- Cube Settings-->
+                <!-- UVSphere Settings-->
+                <!-- Icosphere Settings-->
+                <!-- Cylinder Settings-->
+                <!-- Capsule settings-->
+        </Grid>
         
     </DockPanel>
 </Window>

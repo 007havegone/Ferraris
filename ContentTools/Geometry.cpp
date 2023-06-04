@@ -11,7 +11,7 @@ void
 recalculate_normals(mesh& m)
 {
 	const u32 num_indices{ (u32)m.raw_indices.size() };
-	m.normals.reserve(num_indices);
+	m.normals.resize(num_indices);
 
 	for (u32 i{ 0 }; i < num_indices; ++i)
 	{
@@ -109,18 +109,18 @@ process_uvs(mesh& m)
 {
 	utl::vector<vertex> old_vertices;
 	old_vertices.swap(m.vertices);
-	utl::vector<u32> old_indices;
+	utl::vector<u32> old_indices(m.indices.size());
 	old_indices.swap(m.indices);
 
 	const u32 num_vertices{ (u32)old_vertices.size() };
 	const u32 num_indices{ (u32)old_indices.size() };
 	assert(num_vertices && num_indices);
 
-	utl::vector<utl::vector<u32>> idx_ref(num_indices);
+	utl::vector<utl::vector<u32>> idx_ref(num_vertices);
 	for (u32 i{ 0 }; i < num_indices; ++i)
 		idx_ref[old_indices[i]].emplace_back(i);
 
-	for (u32 i{ 0 }; i < num_indices; ++i)
+	for (u32 i{ 0 }; i < num_vertices; ++i)
 	{
 		auto& refs{ idx_ref[i] };
 		u32 num_refs{ (u32)refs.size() };
@@ -182,7 +182,7 @@ pack_vertices_static(mesh& m)
 void
 process_vertices(mesh& m, const geometry_import_settings& settings)
 {
-	assert((m.raw_indices.size() % 3 == 0));
+	assert((m.raw_indices.size() % 3) == 0);
 	if (settings.calculate_normals || m.normals.empty())
 	{
 		recalculate_normals(m);

@@ -13,7 +13,7 @@
 #endif
 
 #include <Windows.h> // load dll by win32 function
-
+#include <atlsafe.h>
 using namespace ferraris;
 
 namespace {

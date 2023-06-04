@@ -61,7 +61,7 @@ create_plane(const primitive_init_info& info,
 			as_array[vertical_index] += j * vertical_step;
 			m.positions.emplace_back(position.x * info.size.x, position.y * info.size.y, position.z * info.size.z);
 
-			v2 uv{ u_range.x, 1.f - u_range.x };
+			v2 uv{ u_range.x, 1.f - v_range.x };
 			uv.x += i * u_step;
 			uv.y -= j * v_step;
 			uvs.emplace_back(uv);
@@ -79,7 +79,7 @@ create_plane(const primitive_init_info& info,
 			const u32 index[4]
 			{
 				i + j * row_length,
-				i + (j / +1) * row_length,
+				i + (j + 1) * row_length,
 				(i + 1) + j * row_length,
 				(i + 1) + (j + 1) * row_length
 			};
@@ -146,6 +146,7 @@ CreatePrimitiveMesh(scene_data* data, primitive_init_info* info)
 	assert(info->type < primitive_mesh_type::count);
 	scene scene{}; 
 	creators[info->type](scene, *info);
+	data->settings.calculate_normals = 1;
 	process_scene(scene, data->settings);
 	pack_data(scene, *data);
 }

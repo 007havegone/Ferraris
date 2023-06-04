@@ -216,7 +216,7 @@ get_mesh_size(const mesh& m)
 		vertex_buffer_size + // room for vertices
 		index_buffer_size // room for indices
 	};
-
+	
 	return size;
 }
 
@@ -266,15 +266,15 @@ pack_mesh_data(const mesh& m, u8* const buffer, u64& at)
 	// number of vertices
 	const u32 num_vertices{ (u32)m.vertices.size() };
 	s = num_vertices;
-	memcpy(&buffer[at], &s, at); at += su32;
+	memcpy(&buffer[at], &s, su32); at += su32;
 	// index size ( 16 bit or 32bit)
 	const u32 index_size{ (num_vertices < (1 << 16)) ? sizeof(u16) : sizeof(u32) };
 	s = index_size;
-	memcpy(&buffer[at], &s, su32); at + su32;
+	memcpy(&buffer[at], &s, su32); at += su32;
 	// number of indices
 	const u32 num_indices{ (u32)m.indices.size() };
 	s = num_indices;
-	memcpy(&buffer[at], &s, su32); at + su32;
+	memcpy(&buffer[at], &s, su32); at += su32;
 	// LOD threshlod
 	memcpy(&buffer[at], &m.lod_threshold, sizeof(f32)); at += sizeof(f32);
 	// vertex data

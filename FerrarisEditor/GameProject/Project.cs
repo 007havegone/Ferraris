@@ -1,5 +1,5 @@
 ﻿using FerrarisEditor.Components;
-using FerrarisEditor.DllWarpper;
+using FerrarisEditor.DllWrapper;
 using FerrarisEditor.GameDev;
 using FerrarisEditor.Utilities;
 using System;

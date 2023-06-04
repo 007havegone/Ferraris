@@ -1,5 +1,5 @@
 ﻿using FerrarisEditor.ContentToolsAPIStructs;
-using FerrarisEditor.DllWarpper;
+using FerrarisEditor.DllWrapper;
 using FerrarisEditor.Editors;
 using FerrarisEditor.Utilities.Controls;
 using System;
@@ -53,13 +53,13 @@ namespace FerrarisEditor.Content
                 }
                 case PrimitiveMeshType.Cube:
                     break;
-                case PrimitiveMeshType.Capsule:
-                    break;
                 case PrimitiveMeshType.UvSphere:
                     break;
                 case PrimitiveMeshType.IcoSphere:
                     break;
                 case PrimitiveMeshType.Cylinder:
+                    break;
+                case PrimitiveMeshType.Capsule:
                     break;
             }
             var geometry = new Geometry();

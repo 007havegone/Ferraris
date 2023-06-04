@@ -53,7 +53,7 @@ namespace FerrarisEditor.ContentToolsAPIStructs
     }
     
 }
-namespace FerrarisEditor.DllWarpper
+namespace FerrarisEditor.DllWrapper
 {
     static class ContentToolsAPI
     {

@@ -73,7 +73,7 @@
                                         TickPlacement="BottomRight" x:Name="xSliderPlane" ValueChanged="OnSlider_ValueChanged"/>
                             </DockPanel>
                             <DockPanel Margin="5">
-                                <TextBlock Text="Width" Width="40" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                                <TextBlock Text="Length" Width="40" DockPanel.Dock="Left" VerticalAlignment="Center"/>
                                 <TextBlock Text="{Binding Path=Value, ElementName=zSliderPlane}" Width="30" DockPanel.Dock="Right"/>
                                 <!--The TextBlock value binding to the Slider-->
                                 <Slider MinHeight="1" Maximum="10" HorizontalAlignment="Stretch" Interval="1" IsSnapToTickEnabled="True"
@@ -105,11 +105,19 @@
 
                 <Button Content="Save" Width="96" Margin="5,0"/>
             </StackPanel>
-                <!-- Cube Settings-->
-                <!-- UVSphere Settings-->
-                <!-- Icosphere Settings-->
-                <!-- Cylinder Settings-->
-                <!-- Capsule settings-->
+            <!-- Cube Settings-->
+            <!-- UVSphere Settings-->
+            <!-- Icosphere Settings-->
+            <!-- Cylinder Settings-->
+            <!-- Capsule settings-->
+
+            <ed:GeometryView DataContext="{Binding MeshRenderer}" Grid.Column="1"/>
+
+            <StackPanel Grid.Column="1" Margin="5" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <TextBlock Text="{Binding MeshRenderer.CameraPosition.X, StringFormat=G5}"/>
+                <TextBlock Text="{Binding MeshRenderer.CameraPosition.Y, StringFormat=G5}" Margin="10,0"/>
+                <TextBlock Text="{Binding MeshRenderer.CameraPosition.Z, StringFormat=G5}"/>
+            </StackPanel>
         </Grid>
         
     </DockPanel>

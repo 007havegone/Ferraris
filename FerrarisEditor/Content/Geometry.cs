@@ -19,7 +19,6 @@ namespace FerrarisEditor.Content
         IcoSphere,
         Cylinder,
         Capsule,
-        Count
     }
     // The Mesh contains the vertext info for rendering
     class Mesh : ViewModelBase
@@ -219,7 +218,7 @@ namespace FerrarisEditor.Content
             var lodId = reader.ReadInt32();
             mesh.VertexSize = reader.ReadInt32();
             mesh.VertexCount = reader.ReadInt32();
-            mesh.IndexSize = reader.ReadInt32();
+            mesh.IndexSize = reader.ReadInt32();// 这里的数据没有正常初始化
             mesh.IndexCount = reader.ReadInt32();
             var lodThreshold = reader.ReadSingle();
 

@@ -31,7 +31,7 @@ namespace FerrarisEditor.EngineAPIStructs
     }
 }
 
-namespace FerrarisEditor.DllWarpper
+namespace FerrarisEditor.DllWrapper
 {
     static class EngineAPI
     {

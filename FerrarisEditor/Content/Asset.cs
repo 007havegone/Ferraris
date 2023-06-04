@@ -5,7 +5,7 @@ namespace FerrarisEditor.Content
     enum AssetType
     {
         Unknown,
-        Aniamtion,
+        Animation,
         Audio,
         Material,
         Mesh,

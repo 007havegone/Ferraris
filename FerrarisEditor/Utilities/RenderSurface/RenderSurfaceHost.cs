@@ -1,4 +1,4 @@
-﻿using FerrarisEditor.DllWarpper;
+﻿using FerrarisEditor.DllWrapper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

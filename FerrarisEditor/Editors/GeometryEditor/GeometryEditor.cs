@@ -88,12 +88,13 @@ namespace FerrarisEditor.Editors
                 if (_cameraPosition != value)
                 {
                     _cameraPosition = value;
+                    CameraDirection = new Vector3D(-value.X, -value.Y, -value.Z);
                     OnPropertyChanged(nameof(OffsetCameraPosition));
                     OnPropertyChanged(nameof(CameraPosition));
                 }
             }
         }
-        private Point3D _cameraTarget;
+        private Point3D _cameraTarget = new Point3D(0, 0, 0);
         public Point3D CameraTarget
         {
             get => _cameraTarget;
@@ -216,6 +217,7 @@ namespace FerrarisEditor.Editors
                         var nrmY = reader.ReadUInt16() * intervals - 1.0f;
                         var nrmZ = Math.Sqrt(Clamp(1f - (nrmX * nrmX + nrmY * nrmY), 0f, 1f)) * ((signs & 0x2) - 1);
                         var normal = new Vector3D(nrmX, nrmY, nrmZ);
+                        normal.Normalize();
                         vertexData.Normals.Add(normal);
                         avgNormal += normal;
                         // Read UVs
@@ -239,9 +241,9 @@ namespace FerrarisEditor.Editors
                 Meshes.Add(vertexData);
 
             }
+            // set the camera target and position
             if (old != null)
             {
-                // set the camera target and position
                 CameraTarget = old.CameraTarget;
                 CameraPosition = old.CameraPosition;
             }

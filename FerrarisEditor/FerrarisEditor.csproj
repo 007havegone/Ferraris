@@ -89,9 +89,12 @@
     <Compile Include="Dictionaries\ControlTemplates.xaml.cs">
       <DependentUpon>ControlTemplates.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DllWarpper\ContentToolsAPI.cs" />
-    <Compile Include="DllWarpper\EngineAPI.cs" />
+    <Compile Include="DllWrapper\ContentToolsAPI.cs" />
+    <Compile Include="DllWrapper\EngineAPI.cs" />
     <Compile Include="Editors\GeometryEditor\GeometryEditor.cs" />
+    <Compile Include="Editors\GeometryEditor\GeometryView.xaml.cs">
+      <DependentUpon>GeometryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\IAssetEditor.cs" />
     <Compile Include="Editors\WorldEditor\ComponentView.xaml.cs">
       <DependentUpon>ComponentView.xaml</DependentUpon>
@@ -147,6 +150,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dictionaries\EditorColors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\GeometryEditor\GeometryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

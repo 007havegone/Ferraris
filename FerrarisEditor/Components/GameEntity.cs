@@ -1,4 +1,4 @@
-﻿using FerrarisEditor.DllWarpper;
+﻿using FerrarisEditor.DllWrapper;
 using FerrarisEditor.GameProject;
 using FerrarisEditor.Utilities;
 using System;

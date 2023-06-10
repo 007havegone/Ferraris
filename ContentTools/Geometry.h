@@ -2,7 +2,7 @@
 #include "ToolsCommon.h"
 
 namespace ferraris::tools {
-
+// packed data sending to the GPU
 namespace packed_vertex{
 
 struct vertex_static {

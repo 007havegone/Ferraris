@@ -7,9 +7,14 @@ namespace {
 using namespace math;
 using namespace DirectX;
 
+/**
+* Iterate each triangle, use three vertices to calculate the normals.
+*/
 void
 recalculate_normals(mesh& m)
 {
+	// Here we compute the normal for each index
+	// We use these normals to compute the soft/hard edge in next stage.
 	const u32 num_indices{ (u32)m.raw_indices.size() };
 	m.normals.resize(num_indices);
 
@@ -28,7 +33,7 @@ recalculate_normals(mesh& m)
 		XMVECTOR e2{ v2 - v0 };
 
 		XMVECTOR n{ XMVector3Normalize(XMVector3Cross(e1,e2)) };
-
+		// Use the normal of triangle as the vertices normals.
 		XMStoreFloat3(&m.normals[i], n);
 		m.normals[i - 1] = m.normals[i];
 		m.normals[i - 2] = m.normals[i];
@@ -36,6 +41,9 @@ recalculate_normals(mesh& m)
 }
 /**
 *	Split the vertex to have hard or soft edges.
+*   The idea of this function is that, the vertex has several normals,
+*   If the angle of normal is less that the threshold, we can calculate the avg normal as a result. £¨Soft-edge£©
+*   Otherwise, we need to store several different normals for different triangle. (Hard-Edge)
 		1. Hard-edge, a vertex have several normal(per triangle), angle(n1 n2) > smoothing_angle
 		2. Soft-edge, a vertex have one normal edge, angle(n1,n2) < smoothing_angle 
 		We can compare their cosins.
@@ -46,8 +54,12 @@ process_normals(mesh& m, f32 smothing_angle)
 {
 	// smoothing_angle is angle between the plane, here we convert to the angle between normal.
 	const f32 cos_alpha{ XMScalarCos(pi - smothing_angle * pi / 180.f) };
+	// Smoothing angle is 180', which means thats two normals must in same direction, that means all the normal is hard.
+	// Similarly, all the edge is soft edge.
 	const bool is_hard_edge{ XMScalarNearEqual(smothing_angle, 180.f, epsilon) };
 	const bool is_soft_edge{ XMScalarNearEqual(smothing_angle, 0.f, epsilon) };
+
+	// Calculate the intermedate data for export the output data.
 	const u32 num_indices{ (u32)m.raw_indices.size() };
 	const u32 num_vertices{ (u32)m.positions.size() };
 	assert(num_indices && num_vertices);
@@ -61,18 +73,18 @@ process_normals(mesh& m, f32 smothing_angle)
 
 	for (u32 i{ 0 }; i < num_vertices; ++i)
 	{
-		auto& refs{ idx_ref[i] }; // consider which refer this vertex
+		auto& refs{ idx_ref[i] }; // consider which index refer this vertex
 		u32 num_refs{ (u32)refs.size() };
 		for (u32 j{ 0 }; j < num_refs; ++j)
 		{
-			m.indices[refs[j]] = (u32)m.vertices.size();
+			m.indices[refs[j]] = (u32)m.vertices.size();// here is a little confuse, just keep it easy.
 			vertex& v{ m.vertices.emplace_back() };
 			v.position = m.positions[m.raw_indices[refs[j]]];
-
+			// get the first normal
 			XMVECTOR n1{ XMLoadFloat3(&m.normals[refs[j]]) };
 			if (!is_hard_edge)
 			{
-				// compute a soft normal
+				// compute a soft normal, add all the normal vector and avg them.
 				for (u32 k{ j + 1 }; k < num_refs; ++k)
 				{
 					// this value represent the cosine of the angle between normals.
@@ -89,11 +101,11 @@ process_normals(mesh& m, f32 smothing_angle)
 					if (is_soft_edge || cos_theta > cos_alpha)
 					{
 						n1 += n2;
-
+						// now these two index ref to the same vertex normal
 						m.indices[refs[k]] = m.indices[refs[j]];
 						refs.erase(refs.begin() + k);
 						--num_refs;
-						--k;
+						--k;// remove it shitf all the item descrease 1
 					}
 				}
 			}
@@ -127,6 +139,7 @@ process_uvs(mesh& m)
 		for (u32 j{ 0 }; j < num_refs; ++j)
 		{
 			m.indices[refs[j]] = (u32)m.vertices.size();
+			// copy the data from input data to intermediate
 			vertex& v{ old_vertices[old_indices[refs[j]]] };
 			v.uv = m.uv_sets[0][refs[j]];
 			m.vertices.emplace_back(v);
@@ -147,7 +160,9 @@ process_uvs(mesh& m)
 		}
 	}
 }
-
+/**
+* Packed the Output data from the Intermediate data.
+*/
 void
 pack_vertices_static(mesh& m)
 {
@@ -182,6 +197,7 @@ pack_vertices_static(mesh& m)
 void
 process_vertices(mesh& m, const geometry_import_settings& settings)
 {
+	// We process the triangle mesh
 	assert((m.raw_indices.size() % 3) == 0);
 	if (settings.calculate_normals || m.normals.empty())
 	{

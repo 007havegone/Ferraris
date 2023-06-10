@@ -41,7 +41,7 @@ create_plane(const primitive_init_info& info,
 {
 	assert(horizontal_index < 3 && vertical_index < 3);
 	assert(horizontal_index != vertical_index);
-
+	
 	const u32 horizontal_count{ clamp(info.segments[horizontal_index], 1u, 10u) };
 	const u32 vertical_count{ clamp(info.segments[vertical_index], 1u, 10u) };
 	const f32 horzontal_step{ 1.f / horizontal_count };
@@ -51,6 +51,7 @@ create_plane(const primitive_init_info& info,
 
 	mesh m{ };
 	utl::vector<v2> uvs;
+	// compute the vertex info and uv
 	for (u32 j{ 0 }; j <= vertical_count; ++j)
 	{
 		for (u32 i{ 0 }; i <= horizontal_count; ++i)
@@ -60,7 +61,7 @@ create_plane(const primitive_init_info& info,
 			as_array[horizontal_index] += i * horzontal_step;
 			as_array[vertical_index] += j * vertical_step;
 			m.positions.emplace_back(position.x * info.size.x, position.y * info.size.y, position.z * info.size.z);
-
+			// reverse the v to up direction, instead of down direction.
 			v2 uv{ u_range.x, 1.f - v_range.x };
 			uv.x += i * u_step;
 			uv.y -= j * v_step;
@@ -69,7 +70,7 @@ create_plane(const primitive_init_info& info,
 	}
 
 	assert(m.positions.size() == (((u64)horizontal_count + 1) * ((u64)vertical_count + 1)));
-	
+	// compute the uv_index
 	const u32 row_length{ horizontal_count + 1 }; // number of vertices in a row
 	for (u32 j{ 0 }; j < vertical_count; ++j)
 	{
@@ -99,7 +100,7 @@ create_plane(const primitive_init_info& info,
 	assert(m.raw_indices.size() == num_indices);
 
 	m.uv_sets.resize(1);
-
+	// add the uv vertex into the uv_set
 	for (u32 i{ 0 }; i < num_indices; ++i)
 	{
 		m.uv_sets[0].emplace_back(uvs[m.raw_indices[i]]);

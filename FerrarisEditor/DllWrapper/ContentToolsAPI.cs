@@ -19,7 +19,7 @@ namespace FerrarisEditor.ContentToolsAPIStructs
         public byte CalculateNormals = 0;
         public byte CalculateTangents = 1;
         public byte ReverseHandedness = 0;
-        public byte ImportEmbededTexture = 1;
+        public byte ImportEmbeddedTexture = 1;
         public byte ImportAnimation = 1;
     }
     [StructLayout(LayoutKind.Sequential)]

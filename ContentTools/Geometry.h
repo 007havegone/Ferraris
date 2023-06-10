@@ -60,7 +60,7 @@ struct geometry_import_settings
 	u8 calculate_normals;
 	u8 calculate_tangents;
 	u8 reverse_handedness;
-	u8 import_embeded_texture;
+	u8 import_embedded_texture;
 	u8 import_animations;
 };
 struct scene_data

@@ -22,6 +22,9 @@ namespace FerrarisEditor.Editors
     public partial class GeometryView : UserControl
     {
 
+        private Point _clickedPosition;
+        private bool _captureLeft;
+        private bool _captureRight;
         public void SetGeometry(int index = -1)
         {
             if (!(DataContext is MeshRenderer vm)) return;
@@ -75,6 +78,83 @@ namespace FerrarisEditor.Editors
         {
             InitializeComponent();
             DataContextChanged += (s, e) => SetGeometry();
+        }
+
+        private void OnGrid_Mouse_LBD(object sender, MouseButtonEventArgs e)
+        {
+            _clickedPosition = e.GetPosition(this);
+            _captureLeft = true;
+            Mouse.Capture(sender as UIElement);
+        }
+
+        private void OnGrid_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!_captureLeft && !_captureRight) return;
+
+            var pos = e.GetPosition(this);
+            var d = pos - _clickedPosition;
+
+            if(_captureLeft && ! _captureRight)
+            {
+                MoveCamera(d.X, d.Y, 0);
+            }
+            else if(!_captureLeft && _captureRight)
+            {
+                var vm = DataContext as MeshRenderer;
+                var cp = vm.CameraPosition;
+                var yOffset = d.Y * 0.001 * Math.Sqrt(cp.X * cp.X + cp.Z * cp.Z);
+                vm.CameraTarget = new Point3D(vm.CameraPosition.X, vm.CameraPosition.Y + yOffset, vm.CameraPosition.Z);
+            }
+
+            _clickedPosition = pos;
+        }
+
+        private void OnGrid_Mouse_LBU(object sender, MouseButtonEventArgs e)
+        {
+            _captureLeft = false;
+            if (!_captureRight) Mouse.Capture(null);
+        }
+
+        private void OnGrid_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            MoveCamera(0, 0, Math.Sign(e.Delta));
+        }
+
+        private void OnGrid_Mouse_RBD(object sender, MouseButtonEventArgs e)
+        {
+            _clickedPosition = e.GetPosition(this);
+            _captureRight = true;
+            Mouse.Capture(sender as UIElement);
+
+        }
+
+        private void OnGrid_Mouse_RBU(object sender, MouseButtonEventArgs e)
+        {
+            _captureRight = false;
+            if (!_captureLeft) Mouse.Capture(null);
+        }
+        void MoveCamera(double dx, double dy, int dz)
+        {
+            var vm = DataContext as MeshRenderer;
+            var v = new Vector3D(vm.CameraPosition.X, vm.CameraPosition.Y, vm.CameraPosition.Z);
+
+            var r = v.Length;
+            var thera = Math.Acos(v.Y / r);
+            var phi = Math.Atan2(-v.Z, v.X);
+
+            thera -= dy * 0.01;
+            phi -= dx * 0.01;
+            r *= 1.0 - 0.1 * dz; // dz is either +1 or -1 or 0
+
+            thera = thera < 0.0001 ? 0.0001 : (thera > Math.PI - 0.0001 ? Math.PI - 0.0001 : thera);
+
+
+            v.X = r * Math.Sin(thera) * Math.Cos(phi);
+            v.Z = -r * Math.Sin(thera) * Math.Sin(phi);
+            v.Y = r * Math.Cos(thera);
+
+            vm.CameraPosition = new Point3D(v.X, v.Y, v.Z);
+
         }
     }
 }

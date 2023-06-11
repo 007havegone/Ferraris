@@ -73,7 +73,6 @@ namespace FerrarisEditor.Editors
                 if (_cameraDirection != value)
                 {
                     _cameraDirection = value;
-                    OnPropertyChanged(nameof(OffsetCameraPosition));
                     OnPropertyChanged(nameof(CameraDirection));
                 }
             }
@@ -215,7 +214,7 @@ namespace FerrarisEditor.Editors
                         // Read Normals, the details compute refs to the unpack_to_float in Math.h
                         var nrmX = reader.ReadUInt16() * intervals - 1.0f;
                         var nrmY = reader.ReadUInt16() * intervals - 1.0f;
-                        var nrmZ = Math.Sqrt(Clamp(1f - (nrmX * nrmX + nrmY * nrmY), 0f, 1f)) * ((signs & 0x2) - 1);
+                        var nrmZ = Math.Sqrt(Clamp(1f - (nrmX * nrmX + nrmY * nrmY), 0f, 1f)) * ((signs & 0x2) - 1f);
                         var normal = new Vector3D(nrmX, nrmY, nrmZ);
                         normal.Normalize();
                         vertexData.Normals.Add(normal);

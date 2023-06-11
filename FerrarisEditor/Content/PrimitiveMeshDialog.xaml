@@ -11,7 +11,7 @@
         Foreground="{StaticResource Editor.FontBrush}"
         WindowStartupLocation="CenterScreen"
         UseLayoutRounding="True"
-        Title="PrimitiveMeshDialog" Height="600" Width="800"
+        Title="Primitive Mesh" Height="600" Width="800"
         Style="{StaticResource FerrarisDialogStyle}">
     
     <!--add the DataContext for the Geometry-->
@@ -89,11 +89,11 @@
                     <!--The slider control in DockPanel-->
                     <Border CornerRadius="3" BorderThickness="1" BorderBrush="{StaticResource Editor.Window.GrayBrush6}" Margin="5">
                         <StackPanel Margin="5,15,5,5">
-                            <DockPanel Margin="5">
+                            <DockPanel Margin="5,5,5,0">
                                 <TextBlock Text="Width" Width="40" DockPanel.Dock="Left" VerticalAlignment="Center"/>
                                 <utl:ScalarBox x:Name="widthScalarBoxPlane" Value="1" ValueChanged="OnScalarBox_ValueChanged"/>
                             </DockPanel>
-                            <DockPanel Margin="5">
+                            <DockPanel Margin="5,5,5,0">
                                 <TextBlock Text="Length" Width="40" DockPanel.Dock="Left" VerticalAlignment="Center"/>
                                 <utl:ScalarBox x:Name="lengthScalarBoxPlane" Value="1" ValueChanged="OnScalarBox_ValueChanged"/>
                             </DockPanel>
@@ -113,7 +113,7 @@
 
             <ed:GeometryView DataContext="{Binding MeshRenderer}" Grid.Column="1"/>
 
-            <StackPanel Grid.Column="1" Margin="5" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <StackPanel Grid.Column="1" Margin="5" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" IsHitTestVisible="False">
                 <TextBlock Text="{Binding MeshRenderer.CameraPosition.X, StringFormat=G5}"/>
                 <TextBlock Text="{Binding MeshRenderer.CameraPosition.Y, StringFormat=G5}" Margin="10,0"/>
                 <TextBlock Text="{Binding MeshRenderer.CameraPosition.Z, StringFormat=G5}"/>

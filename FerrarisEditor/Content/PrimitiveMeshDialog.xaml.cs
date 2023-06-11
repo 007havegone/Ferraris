@@ -62,6 +62,7 @@ namespace FerrarisEditor.Content
                 case PrimitiveMeshType.Capsule:
                     break;
             }
+            // provide the data to DLL to get the geometry.
             var geometry = new Geometry();
             ContentToolsAPI.CreatePrimitiveMesh(geometry, info);
             // sending the create geometry asset to the GeometryEditor for processing

@@ -29,7 +29,7 @@ struct transform_component
 		// XMQuaternionRotationRollPitchYawToVector
 		XMFLOAT4A rot_quat{};
 		XMStoreFloat4A(&rot_quat, quat);
-		memcpy(&info.rotation, &rot_quat.x, sizeof(f32) * _countof(info.rotation));
+		memcpy(&info.rotation, &rot_quat.x, sizeof(info.rotation));
 		return info;
 	}
 };

@@ -227,9 +227,9 @@ namespace FerrarisEditor.Editors
                     }
                 using (var reader = new BinaryReader(new MemoryStream(mesh.Indices)))
                     if (mesh.IndexSize == sizeof(short))
-                        for (int i = 0; i < mesh.IndexSize; ++i) vertexData.Indices.Add(reader.ReadUInt16());
+                        for (int i = 0; i < mesh.IndexCount; ++i) vertexData.Indices.Add(reader.ReadUInt16());
                     else
-                        for (int i = 0; i < mesh.IndexSize; ++i) vertexData.Indices.Add(reader.ReadInt32());
+                        for (int i = 0; i < mesh.IndexCount; ++i) vertexData.Indices.Add(reader.ReadInt32());
 
                 // done unpacking the data
                 // Freeze the Object, this object does not modify, the framework will do optimization

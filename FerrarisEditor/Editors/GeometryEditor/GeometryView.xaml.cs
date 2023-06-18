@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace FerrarisEditor.Editors
 {
@@ -31,16 +23,16 @@ namespace FerrarisEditor.Editors
 
             // We add the ModelVisaul3D at this viewport at the end of this method.
             // once update remove it and add new one.
-            if(vm.Meshes.Any() && viewport.Children.Count == 2)
+            if (vm.Meshes.Any() && viewport.Children.Count == 2)
             {
                 viewport.Children.RemoveAt(1);
             }
 
             var meshIndex = 0;
             var modelGroup = new Model3DGroup();
-            foreach(var mesh in vm.Meshes)
+            foreach (var mesh in vm.Meshes)
             {
-                if(index != -1 && meshIndex != index)
+                if (index != -1 && meshIndex != index)
                 {
                     ++meshIndex;
                     continue;
@@ -55,7 +47,7 @@ namespace FerrarisEditor.Editors
                 };
 
                 var diffuse = new DiffuseMaterial(mesh.Diffuse);
-                var specular = new SpecularMaterial(mesh.Specular,50);
+                var specular = new SpecularMaterial(mesh.Specular, 50);
                 var matGroup = new MaterialGroup();
                 matGroup.Children.Add(diffuse);
                 matGroup.Children.Add(specular);
@@ -94,11 +86,11 @@ namespace FerrarisEditor.Editors
             var pos = e.GetPosition(this);
             var d = pos - _clickedPosition;
 
-            if(_captureLeft && ! _captureRight)
+            if (_captureLeft && !_captureRight)
             {
                 MoveCamera(d.X, d.Y, 0);
             }
-            else if(!_captureLeft && _captureRight)
+            else if (!_captureLeft && _captureRight)
             {
                 var vm = DataContext as MeshRenderer;
                 var cp = vm.CameraPosition;

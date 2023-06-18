@@ -6,7 +6,9 @@
              xmlns:local="clr-namespace:FerrarisEditor.Editors"
              xmlns:utl="clr-namespace:FerrarisEditor.Utilities"
              xmlns:ctlr="clr-namespace:FerrarisEditor.Utilities.Controls"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:gameproject="clr-namespace:FerrarisEditor.GameProject" d:DataContext="{d:DesignInstance Type=gameproject:Project}"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:gameproject="clr-namespace:FerrarisEditor.GameProject"
+             d:DataContext="{d:DesignInstance Type=gameproject:Project}"
              mc:Ignorable="d" Focusable="True"
              d:DesignHeight="450" d:DesignWidth="800">
     <!--define the bool value of binding parameter-->

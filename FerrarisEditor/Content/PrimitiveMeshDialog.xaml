@@ -13,7 +13,7 @@
         UseLayoutRounding="True"
         Title="Primitive Mesh" Height="600" Width="800"
         Style="{StaticResource FerrarisDialogStyle}">
-    
+
     <!--add the DataContext for the Geometry-->
     <Window.DataContext>
         <ed:GeometryEditor/>
@@ -26,7 +26,7 @@
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </Window.Resources>
-    
+
     <DockPanel Background="{StaticResource Editor.Window.GrayBrush2}">
         <Border Background="{StaticResource Editor.Window.GrayBrush3}" Height="32" DockPanel.Dock="Top"
                 VerticalAlignment="Top" Margin="0,0,0,1">
@@ -39,15 +39,20 @@
                           ItemsSource="{Binding Source={StaticResource dataFromEnum}}"
                           x:Name="primTypeComboBox"
                           SelectionChanged="OnPrimitiveType_ComboBox_SelectionChanged"/>
+
+                <CheckBox x:Name="textureCheckBox" Content="Toggle Textue" VerticalAlignment="Center" Margin="5,0" 
+                          IsChecked="True" Foreground="{StaticResource Editor.FontBrush}"
+                          Click="OnTexture_CheckBox_Click"/>
             </StackPanel>
         </Border>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="100" MaxWidth="200"/>
-                <ColumnDefinition/>
+                <ColumnDefinition MinWidth="100" MaxWidth="200" Width="12*"/>
+                <ColumnDefinition Width="88*"/>
+                <ColumnDefinition Width="291*"/>
             </Grid.ColumnDefinitions>
             <!-- Plane Settings-->
-            <StackPanel Background="{StaticResource Editor.Window.GrayBrush3}">
+            <StackPanel Background="{StaticResource Editor.Window.GrayBrush3}" Grid.ColumnSpan="2">
                 <StackPanel.Style>
                     <Style TargetType="{x:Type StackPanel}">
                         <!--The Panel is Default is collapsed-->
@@ -111,14 +116,14 @@
             <!-- Cylinder Settings-->
             <!-- Capsule settings-->
 
-            <ed:GeometryView DataContext="{Binding MeshRenderer}" Grid.Column="1"/>
+            <ed:GeometryView DataContext="{Binding MeshRenderer}" Grid.Column="2"/>
 
-            <StackPanel Grid.Column="1" Margin="5" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" IsHitTestVisible="False">
+            <StackPanel Grid.Column="2" Margin="5,5,0,0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" IsHitTestVisible="False">
                 <TextBlock Text="{Binding MeshRenderer.CameraPosition.X, StringFormat=G5}"/>
                 <TextBlock Text="{Binding MeshRenderer.CameraPosition.Y, StringFormat=G5}" Margin="10,0"/>
                 <TextBlock Text="{Binding MeshRenderer.CameraPosition.Z, StringFormat=G5}"/>
             </StackPanel>
         </Grid>
-        
+
     </DockPanel>
 </Window>

@@ -193,10 +193,19 @@
 
             <ed:GeometryView DataContext="{Binding MeshRenderer}" Grid.Column="2"/>
 
-            <StackPanel Grid.Column="2" Margin="5,5,0,0" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" IsHitTestVisible="False">
-                <TextBlock Text="{Binding MeshRenderer.CameraPosition.X, StringFormat=G5}"/>
-                <TextBlock Text="{Binding MeshRenderer.CameraPosition.Y, StringFormat=G5}" Margin="10,0"/>
-                <TextBlock Text="{Binding MeshRenderer.CameraPosition.Z, StringFormat=G5}"/>
+            <StackPanel Grid.Column="2" Margin="5,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" IsHitTestVisible="False">
+                <!--The position of the Camera-->
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding MeshRenderer.CameraPosition.X, StringFormat=G5}" Foreground="{StaticResource Editor.RedBrush}"/>
+                    <TextBlock Text="{Binding MeshRenderer.CameraPosition.Y, StringFormat=G5}" Margin="10,0" Foreground="{StaticResource Editor.GreenBrush}"/>
+                    <TextBlock Text="{Binding MeshRenderer.CameraPosition.Z, StringFormat=G5}" Foreground="{StaticResource Editor.BlueBrush}"/>
+                </StackPanel>
+
+                <!--The number of the vertices and indices-->
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding MeshRenderer.Meshes[0].Positions.Count}" Foreground="{StaticResource Editor.OrangeBrush}"/>
+                    <TextBlock Text="{Binding MeshRenderer.Meshes[0].Indices.Count}" Margin="10,0" Foreground="{StaticResource Editor.OrangeBrush}"/>
+                </StackPanel>
             </StackPanel>
         </Grid>
 

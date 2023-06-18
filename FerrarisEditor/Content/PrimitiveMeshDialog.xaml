@@ -143,14 +143,14 @@
                                 <TextBlock Text="Lon." Width="40" DockPanel.Dock="Left" VerticalAlignment="Center"/>
                                 <TextBlock Text="{Binding Path=Value, ElementName=xSliderUvSphere}" Width="30" DockPanel.Dock="Right"/>
                                 <!--The TextBlock value binding to the Slider-->
-                                <Slider Minimum="3" Maximum="64" HorizontalAlignment="Stretch" Interval="1" IsSnapToTickEnabled="True"
+                                <Slider Minimum="3" Maximum="64" Value="24" HorizontalAlignment="Stretch" Interval="1" IsSnapToTickEnabled="True"
                                         TickPlacement="BottomRight" x:Name="xSliderUvSphere" ValueChanged="OnSlider_ValueChanged"/>
                             </DockPanel>
                             <DockPanel Margin="5">
                                 <TextBlock Text="Lat." Width="40" DockPanel.Dock="Left" VerticalAlignment="Center"/>
                                 <TextBlock Text="{Binding Path=Value, ElementName=ySliderUvSphere}" Width="30" DockPanel.Dock="Right"/>
                                 <!--The TextBlock value binding to the Slider-->
-                                <Slider Minimum="2" Maximum="64" HorizontalAlignment="Stretch" Interval="1" IsSnapToTickEnabled="True"
+                                <Slider Minimum="2" Maximum="64" Value="12" HorizontalAlignment="Stretch" Interval="1" IsSnapToTickEnabled="True"
                                         TickPlacement="BottomRight" x:Name="ySliderUvSphere" ValueChanged="OnSlider_ValueChanged"/>
                             </DockPanel>
                         </StackPanel>
@@ -182,6 +182,20 @@
                     <Label Content="Segments" VerticalAlignment="Top" 
                            HorizontalAlignment="Left" Margin="20,-3,0,0"
                            Foreground="{StaticResource Editor.FontBrush}"/>
+                </Grid>
+
+                <Grid Margin="0,5">
+                    <!--The slider control in DockPanel-->
+                    <Border CornerRadius="3" BorderThickness="1" BorderBrush="{StaticResource Editor.Window.GrayBrush6}"
+                            Background="{StaticResource Editor.Window.GrayBrush4}" Margin="5">
+                        <DockPanel Margin="5">
+                            <TextBlock Text="Angle" Width="40" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=Value, ElementName=angleSliderUvSphere}" Width="30" DockPanel.Dock="Right"/>
+                            <!--The TextBlock value binding to the Slider-->
+                            <Slider Minimum="0" Maximum="180" Value="0" HorizontalAlignment="Stretch" Interval="1" IsSnapToTickEnabled="True"
+                                    x:Name="angleSliderUvSphere" ValueChanged="OnSlider_ValueChanged"/>
+                        </DockPanel>
+                    </Border>
                 </Grid>
 
                 <Button Content="Save" Width="96" Margin="5,0"/>

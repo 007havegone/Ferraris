@@ -25,6 +25,7 @@ namespace FerrarisEditor.Content
     public partial class PrimitiveMeshDialog : Window
     {
         private static readonly List<ImageBrush> _textures = new List<ImageBrush>();
+
         private void OnPrimitiveType_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) => UpdatePrimitive();
 
         private void OnSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePrimitive();
@@ -41,6 +42,7 @@ namespace FerrarisEditor.Content
             if (!IsInitialized) return;
             var primitiveType = (PrimitiveMeshType)primTypeComboBox.SelectedItem;
             var info = new PrimitiveInitInfo { Type = primitiveType };
+            var smoothingAngle = 0;
 
             switch(primitiveType)
             {
@@ -61,6 +63,7 @@ namespace FerrarisEditor.Content
                     info.Size.X = Value(xScalarBoxUvSphere, 0.001f);
                     info.Size.Y = Value(xScalarBoxUvSphere, 0.001f);
                     info.Size.Z = Value(xScalarBoxUvSphere, 0.001f);
+                    smoothingAngle = (int)angleSliderUvSphere.Value;
                 }
                 break;
                 case PrimitiveMeshType.IcoSphere:
@@ -72,6 +75,7 @@ namespace FerrarisEditor.Content
             }
             // provide the data to DLL to get the geometry.
             var geometry = new Geometry();
+            geometry.ImportSettings.SmoothingAngle = smoothingAngle;
             ContentToolsAPI.CreatePrimitiveMesh(geometry, info);
             // sending the create geometry asset to the GeometryEditor for processing
             (DataContext as GeometryEditor).SetAsset(geometry);

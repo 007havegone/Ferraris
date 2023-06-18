@@ -93,9 +93,9 @@ namespace FerrarisEditor.Editors
             else if (!_captureLeft && _captureRight)
             {
                 var vm = DataContext as MeshRenderer;
-                var cp = vm.CameraPosition;
+                var cp = vm.CameraDirection;
                 var yOffset = d.Y * 0.001 * Math.Sqrt(cp.X * cp.X + cp.Z * cp.Z);
-                vm.CameraTarget = new Point3D(vm.CameraPosition.X, vm.CameraPosition.Y + yOffset, vm.CameraPosition.Z);
+                vm.CameraTarget = new Point3D(vm.CameraTarget.X, vm.CameraTarget.Y + yOffset, vm.CameraTarget.Z);
             }
 
             _clickedPosition = pos;

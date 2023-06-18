@@ -138,7 +138,7 @@ create_uv_sphere(const primitive_init_info& info)
 			m.positions[c++] = {
 				info.size.x * XMScalarSin(theta) * XMScalarCos(phi),
 				info.size.y * XMScalarCos(theta),
-				-info.size.y * XMScalarSin(theta) * XMScalarSin(phi) };
+				-info.size.z * XMScalarSin(theta) * XMScalarSin(phi) };
 		}
 	}
 

@@ -52,12 +52,11 @@
         </Border>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="100" MaxWidth="200" Width="12*"/>
-                <ColumnDefinition Width="88*"/>
-                <ColumnDefinition Width="291*"/>
+                <ColumnDefinition MinWidth="100" MaxWidth="200"/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <!-- Plane Settings-->
-            <StackPanel Background="{StaticResource Editor.Window.GrayBrush3}" Grid.ColumnSpan="2">
+            <StackPanel Background="{StaticResource Editor.Window.GrayBrush3}">
                 <StackPanel.Style>
                     <Style TargetType="{x:Type StackPanel}">
                         <!--The Panel is Default is collapsed-->
@@ -121,7 +120,7 @@
             </StackPanel>
             <!-- Cube Settings-->
             <!-- UVSphere Settings-->
-            <StackPanel Background="{StaticResource Editor.Window.GrayBrush3}" Grid.ColumnSpan="2">
+            <StackPanel Background="{StaticResource Editor.Window.GrayBrush3}" Grid.ColumnSpan="1">
                 <StackPanel.Style>
                     <Style TargetType="{x:Type StackPanel}">
                         <!--The Panel is Default is collapsed-->
@@ -191,9 +190,9 @@
             <!-- Cylinder Settings-->
             <!-- Capsule settings-->
 
-            <ed:GeometryView DataContext="{Binding MeshRenderer}" Grid.Column="2"/>
+            <ed:GeometryView DataContext="{Binding MeshRenderer}" Grid.Column="1"/>
 
-            <StackPanel Grid.Column="2" Margin="5,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" IsHitTestVisible="False">
+            <StackPanel Grid.Column="1" Margin="5,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" IsHitTestVisible="False">
                 <!--The position of the Camera-->
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding MeshRenderer.CameraPosition.X, StringFormat=G5}" Foreground="{StaticResource Editor.RedBrush}"/>

@@ -179,8 +179,8 @@
                             </DockPanel>
                         </StackPanel>
                     </Border>
-                    <Label Content="Segments" VerticalAlignment="Top" 
-                           HorizontalAlignment="Left" Margin="20,-3,0,0"
+                    <Label Content="Size" VerticalAlignment="Top" 
+                           HorizontalAlignment="Left" Padding="5,0"
                            Foreground="{StaticResource Editor.FontBrush}"/>
                 </Grid>
 
@@ -188,7 +188,7 @@
                     <!--The slider control in DockPanel-->
                     <Border CornerRadius="3" BorderThickness="1" BorderBrush="{StaticResource Editor.Window.GrayBrush6}"
                             Background="{StaticResource Editor.Window.GrayBrush4}" Margin="5">
-                        <DockPanel Margin="5">
+                        <DockPanel Margin="5,15,5,5">
                             <TextBlock Text="Angle" Width="40" DockPanel.Dock="Left" VerticalAlignment="Center"/>
                             <TextBlock Text="{Binding Path=Value, ElementName=angleSliderUvSphere}" Width="30" DockPanel.Dock="Right"/>
                             <!--The TextBlock value binding to the Slider-->
@@ -196,6 +196,9 @@
                                     x:Name="angleSliderUvSphere" ValueChanged="OnSlider_ValueChanged"/>
                         </DockPanel>
                     </Border>
+                    <Label Content="Smoothing Angle" VerticalAlignment="Top" 
+                           HorizontalAlignment="Left" Padding="5,0"
+                           Foreground="{StaticResource Editor.FontBrush}"/>
                 </Grid>
 
                 <Button Content="Save" Width="96" Margin="5,0"/>

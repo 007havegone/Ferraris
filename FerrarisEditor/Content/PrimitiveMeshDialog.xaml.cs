@@ -89,7 +89,7 @@ namespace FerrarisEditor.Content
             {
                 new Uri("pack://application:,,,/Resources/PrimitiveMeshView/PlaneTexture.jpg"),
                 new Uri("pack://application:,,,/Resources/PrimitiveMeshView/PlaneTexture.jpg"),
-                new Uri("pack://application:,,,/Resources/PrimitiveMeshView/PlaneTexture.jpg"),
+                new Uri("pack://application:,,,/Resources/PrimitiveMeshView/UvSphereTexture.png"),
 
             };
 
@@ -109,7 +109,7 @@ namespace FerrarisEditor.Content
                 _textures.Add(brush);
             }
         }
-
+       
         static PrimitiveMeshDialog()
         {
             LoadTextures();

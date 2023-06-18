@@ -307,7 +307,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\PrimitiveMeshView\PlaneTexture.png" />
+    <Resource Include="Resources\PrimitiveMeshView\UvSphereTexture.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\PrimitiveMeshView\PlaneTexture.jpg" />

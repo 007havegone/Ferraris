@@ -114,6 +114,8 @@ create_plane(const primitive_init_info& info,
 mesh
 create_uv_sphere(const primitive_init_info& info)
 {
+	// phi is the horizon direction
+	// theta is the vertical direction
 	const u32 phi_count{ clamp(info.segments[axis::x], 3u, 64u) };
 	const u32 theta_count{ clamp(info.segments[axis::y], 2u, 64u) };
 	const f32 theta_step{ pi / theta_count };
@@ -146,16 +148,26 @@ create_uv_sphere(const primitive_init_info& info)
 
 	c = 0;
 	m.raw_indices.resize(num_indices);
+	utl::vector<v2> uvs{ num_indices };
+	const f32 inv_theta_count{ 1.f / theta_count };
+	const f32 inv_phi_count{ 1.f / phi_count };
 
 	// Indices for the top cap, connecting the north pole to the first ring.
 	for (u32 i{ 0 }; i < phi_count - 1; ++i)
 	{
+		uvs[c] = { (2 * i + 1) * 0.5f * inv_theta_count, 1.0f }; // the uv at the middle of the i and i+1 point, because reverse the bottom v is 1.0f
 		m.raw_indices[c++] = 0;
+		uvs[c] = { i * inv_phi_count, 1.f - inv_theta_count };
 		m.raw_indices[c++] = i + 1;
+		uvs[c] = { (i + 1) * inv_phi_count, 1.f - inv_theta_count };
 		m.raw_indices[c++] = i + 2;
 	}
+
+	uvs[c] = { 1.f - 0.5f * inv_phi_count, 1.f };
 	m.raw_indices[c++] = 0;
+	uvs[c] = { 1.f - inv_phi_count, 1.f - inv_theta_count };
 	m.raw_indices[c++] = phi_count;
+	uvs[c] = { 1.f, 1.f - inv_theta_count };
 	m.raw_indices[c++] = 1;
 
 	// Indices for the section between the top and bottom ring.
@@ -169,13 +181,18 @@ create_uv_sphere(const primitive_init_info& info)
 				1 + (i + 1) + (j + 1) * phi_count,
 				1 + (i + 1) + j * phi_count
 			};
-
+			uvs[c] = { i * inv_phi_count, 1.f - (j + 1) * inv_theta_count };
 			m.raw_indices[c++] = index[0];
+			uvs[c] = { i * inv_phi_count, 1.f - (j + 2) * inv_theta_count };
 			m.raw_indices[c++] = index[1];
+			uvs[c] = { (i + 1) * inv_phi_count, 1.f - (j + 2) * inv_theta_count };
 			m.raw_indices[c++] = index[2];
 
+			uvs[c] = { i * inv_phi_count, 1.f - (j + 1) * inv_theta_count };
 			m.raw_indices[c++] = index[0];
+			uvs[c] = { (i + 1) * inv_phi_count, 1.f - (j + 2) * inv_theta_count };
 			m.raw_indices[c++] = index[2];
+			uvs[c] = { (i + 1) * inv_phi_count, 1.f - (j + 1) * inv_theta_count };
 			m.raw_indices[c++] = index[3];
 
 		}
@@ -187,12 +204,18 @@ create_uv_sphere(const primitive_init_info& info)
 			1 + j * phi_count
 		};
 
+		uvs[c] = { 1.f - inv_phi_count, 1.f - (j + 1) * inv_theta_count };
 		m.raw_indices[c++] = index[0];
+		uvs[c] = { 1.f - inv_phi_count, 1.f - (j + 2) * inv_theta_count };
 		m.raw_indices[c++] = index[1];
+		uvs[c] = { 1.f, 1.f - (j + 2) * inv_theta_count };
 		m.raw_indices[c++] = index[2];
 
+		uvs[c] = { 1.f - inv_phi_count, 1.f - (j + 1) * inv_theta_count };
 		m.raw_indices[c++] = index[0];
+		uvs[c] = { 1.f, 1.f - (j + 2) * inv_theta_count };
 		m.raw_indices[c++] = index[2];
+		uvs[c] = { 1.f, 1.f - (j + 1) * inv_theta_count };
 		m.raw_indices[c++] = index[3];
 
 	}
@@ -201,18 +224,23 @@ create_uv_sphere(const primitive_init_info& info)
 	const u32 south_pole_index{ (u32)m.positions.size() - 1 };
 	for (u32 i{ 0 }; i < (phi_count - 1); ++i)
 	{
+		uvs[c] = { (2 * i + 1) * 0.5f * inv_phi_count, 0.f };
 		m.raw_indices[c++] = south_pole_index;
+		uvs[c] = { (i + 1) * inv_phi_count, inv_theta_count };
 		m.raw_indices[c++] = south_pole_index - phi_count + i + 1;
+		uvs[c] = { i * inv_phi_count, inv_theta_count };
 		m.raw_indices[c++] = south_pole_index - phi_count + i;
 	}
-
+	uvs[c] = { 1.f - 0.5f * inv_phi_count, 0.f };
 	m.raw_indices[c++] = south_pole_index;
+	uvs[c] = { 1.f, inv_theta_count };
 	m.raw_indices[c++] = south_pole_index - phi_count;
+	uvs[c] = { 1.f - inv_phi_count, inv_theta_count };
 	m.raw_indices[c++] = south_pole_index - 1;
 
-	m.uv_sets.resize(1);
-	m.uv_sets[0].resize(m.raw_indices.size());
+	assert(c == num_indices);
 
+	m.uv_sets.emplace_back(uvs);
 	return m;
 }
 void

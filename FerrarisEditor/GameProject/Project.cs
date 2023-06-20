@@ -37,6 +37,8 @@ namespace FerrarisEditor.GameProject
 
         public string Solution => $@"{Path}{Name}.sln";// full path of .sln file
 
+        public string ContentPath => $@"{Path}Content\"; // content path for the projects
+
         private static readonly string[] _buildConfigurationNames = new string[] { "Debug", "DebugEditor", "Release", "ReleaseEditor" };
 
         // prop binding to Combo Box, only 0 or 1

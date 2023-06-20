@@ -1,9 +1,12 @@
 ﻿using FerrarisEditor.ContentToolsAPIStructs;
 using FerrarisEditor.DllWrapper;
 using FerrarisEditor.Editors;
+using FerrarisEditor.GameProject;
 using FerrarisEditor.Utilities.Controls;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -132,6 +135,24 @@ namespace FerrarisEditor.Content
             foreach(var mesh in vm.MeshRenderer.Meshes)
             {
                 mesh.Diffuse = brush;
+            }
+        }
+
+        private void OnSave_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new SaveFileDialog()
+            {
+                InitialDirectory = Project.Current.ContentPath,
+                Filter = "Asset file (*.asset)|*.asset"
+            };
+            // display the dialog and select the file to to save the asset.
+            if(dlg.ShowDialog() == true)
+            {
+                Debug.Assert(!String.IsNullOrEmpty(dlg.FileName));
+                var asset = (DataContext as IAssetEditor).Asset;
+                Debug.Assert(asset != null);
+                asset.Save(dlg.FileName);
+
             }
         }
     }

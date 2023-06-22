@@ -30,6 +30,10 @@
     <ClInclude Include="EngineAPI\GameEntity.h" />
     <ClInclude Include="EngineAPI\ScriptComponent.h" />
     <ClInclude Include="EngineAPI\TransformComponent.h" />
+    <ClInclude Include="Graphics\Direct3D12\D3D12CommomHeader.h" />
+    <ClInclude Include="Graphics\Direct3D12\D3D12Core.h" />
+    <ClInclude Include="Graphics\Direct3D12\D3D12Interface.h" />
+    <ClInclude Include="Graphics\GraphicsPlatformInterface.h" />
     <ClInclude Include="Graphics\Renderer.h" />
     <ClInclude Include="Platform\Platform.h" />
     <ClInclude Include="Platform\PlatformTypes.h" />
@@ -45,6 +49,9 @@
     <ClCompile Include="Content\ContentLoader.cpp" />
     <ClCompile Include="Core\Engine.cpp" />
     <ClCompile Include="Core\Main.cpp" />
+    <ClCompile Include="Graphics\Direct3D12\D3D12Core.cpp" />
+    <ClCompile Include="Graphics\Direct3D12\D3D12Interface.cpp" />
+    <ClCompile Include="Graphics\Renderer.cpp" />
     <ClCompile Include="Platform\Platform.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -128,7 +135,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FloatingPointModel>Fast</FloatingPointModel>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)Common</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Common</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -153,7 +160,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FloatingPointModel>Fast</FloatingPointModel>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)Common</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Common</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -182,7 +189,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)Common</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Common</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -213,7 +220,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)Common</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Common</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>

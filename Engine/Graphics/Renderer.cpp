@@ -25,6 +25,8 @@ set_platform_interface(graphics_platform platform)
 bool
 initialize(graphics_platform platform)
 {
+	// Allocate the gfx interface according the Render API type
+	// and call the initialize the Pipeline
 	return set_platform_interface(platform) && gfx.initialize();
 }
 

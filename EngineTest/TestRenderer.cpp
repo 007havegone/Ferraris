@@ -1,3 +1,4 @@
+#ifdef TEST_RENDERER
 #include "..\Platform\PlatformTypes.h"
 #include "..\Platform\Platform.h"
 #include "..\Graphics\Renderer.h"
@@ -86,3 +87,4 @@ engine_test::shutdown()
 	graphics::shutdown();
 }
 
+#endif // TEST_RENDERER

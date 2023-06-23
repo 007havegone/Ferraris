@@ -8,6 +8,7 @@ namespace ferraris::graphics{
 struct platform_interface
 {
 	bool (*initialize)(void);
-	void (*shutdown)();
+	void (*shutdown)(void);
+	void (*render)(void);
 };
 }

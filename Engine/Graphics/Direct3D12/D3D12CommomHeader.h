@@ -10,6 +10,10 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d12.lib")
 
+namespace ferraris::graphics::d3d12{
+constexpr u32 frame_buffer_count{ 3 };
+}
+
 // Assert that COM call to D3D API successed
 
 #ifdef _DEBUG
@@ -37,6 +41,18 @@ if(FAILED(x)) {										\
 #ifdef _DEBUG
 // Set the name of the COM object and output a debug string int Visual's studio output pannel.
 #define NAME_D3D12_OBJECT(obj, name) obj->SetName(name); OutputDebugString(L"::D3D12 Object Created: "); OutputDebugString(name); OutputDebugString(L"\n");
+// The index variant will include the index in the name of the object
+#define NAME_D3D12_OBJECT_INDEX(obj, n, name)		\
+{													\
+wchar_t fullname[128];								\
+if(swprintf_s(fullname, L"%s[%u]", name, n) > 0){	\
+	obj->SetName(fullname);						\
+	OutputDebugString(L"::D3D12 Object Created: ");	\
+	OutputDebugString(fullname);					\
+	OutputDebugString(L"\n");						\
+}}
 #else
 #define NAME_D3D12_OBJECT(x, name)
+#define NAME_D3D12_OBJECT_INDEX(x, n, name)
 #endif
+

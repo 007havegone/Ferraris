@@ -35,4 +35,9 @@ shutdown()
 {
 	gfx.shutdown();
 }
+void
+render()
+{
+	gfx.render();
+}
 }

@@ -1,9 +1,8 @@
-#ifdef TEST_RENDERER
 #include "..\Platform\PlatformTypes.h"
 #include "..\Platform\Platform.h"
 #include "..\Graphics\Renderer.h"
 #include "TestRenderer.h"
-
+#if TEST_RENDERER
 
 using namespace ferraris;
 // here we use the render_surface to abstract different Render API
@@ -71,6 +70,7 @@ void
 engine_test::run()
 {
 	std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	graphics::render();
 
 }
 void

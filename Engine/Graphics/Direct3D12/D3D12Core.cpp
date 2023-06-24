@@ -319,5 +319,11 @@ render()
 	// signal and increment the fence value for next frame.
 	gfx_command.end_frame();
 }
+
+ID3D12Device* const 
+device()
+{
+	return main_device;
+}
 }
 

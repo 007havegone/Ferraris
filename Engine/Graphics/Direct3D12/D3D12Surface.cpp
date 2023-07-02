@@ -7,7 +7,7 @@ namespace {
 constexpr DXGI_FORMAT
 to_non_srgb(DXGI_FORMAT format)
 {
-	if (format == DXGI_FORMAT_R8G8B8A8_UNORM_SRGB) return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	if (format == DXGI_FORMAT_R8G8B8A8_UNORM_SRGB) return DXGI_FORMAT_R8G8B8A8_UNORM;
 	return format;
 }
 
@@ -72,8 +72,8 @@ d3d12_surface::finalize()
 	// set viewport and scissor rect
 	_viewport.TopLeftX = 0.f;
 	_viewport.TopLeftY = 0.f;
-	_viewport.Height = height;
-	_viewport.Width = width;
+	_viewport.Height = (float)height;
+	_viewport.Width = (float)width;
 	_viewport.MinDepth = 0.f;
 	_viewport.MaxDepth = 1.f;
 

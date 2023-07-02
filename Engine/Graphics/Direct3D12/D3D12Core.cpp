@@ -429,7 +429,8 @@ void
 remove_surface(surface_id id)
 {
 	gfx_command.flush();
-	// TODO: add a free-list container. surfaces[id] = d3d12_surface{};
+	// TODO: add a free-list container.
+	surfaces[id].~d3d12_surface();
 }
 void
 resize_surface(surface_id id, u32, u32)

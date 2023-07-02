@@ -37,7 +37,6 @@ enum class graphics_platform : u32
 
 bool initialize(graphics_platform platform);
 void shutdown();
-void render();
 
 surface create_surface(platform::window window);
 void remove_surface(surface_id id);

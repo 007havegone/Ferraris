@@ -26,7 +26,7 @@ descriptor_heap::initialize(u32 capacity, bool is_shader_visible)
 		? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE
 		: D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	desc.NodeMask = 0;
-	desc.NumDescriptors = _capacity;
+	desc.NumDescriptors = capacity;
 	desc.Type = _type;
 
 	HRESULT hr{ S_OK };

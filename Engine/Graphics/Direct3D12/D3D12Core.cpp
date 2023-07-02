@@ -240,7 +240,7 @@ process_deferred_releases(u32 frame_idx)
 	// NOTE: we clear this flag in the beginning. If we'd clear it at the end.
 	//		 then it might overwrite some other thread that was trying to set it.
 	//		 It's fine if overwriting happens before processing the items.
-	deferred_release_flag[frame_idx] = false;
+	deferred_release_flag[frame_idx] = 0;
 	rtv_desc_heap.process_deferred_free(frame_idx);
 	dsv_desc_heap.process_deferred_free(frame_idx);
 	srv_desc_heap.process_deferred_free(frame_idx);
@@ -314,11 +314,7 @@ initialize()
 
 	DXCall(hr = D3D12CreateDevice(main_adapter.Get(), max_feature_level, IID_PPV_ARGS(&main_device)));
 	if (FAILED(hr)) return failed_init();
-
-	// Here using the placement new to create the gfx_command
-	new(&gfx_command) d3d12_command(main_device, D3D12_COMMAND_LIST_TYPE_DIRECT);
-	if (!gfx_command.command_queue()) return failed_init();
-
+	
 #ifdef _DEBUG
 	{
 		ComPtr<ID3D12InfoQueue> info_queue;
@@ -333,8 +329,13 @@ initialize()
 	bool result{ true };
 	result &= rtv_desc_heap.initialize(512, false);
 	result &= dsv_desc_heap.initialize(512, false);
-	result &= srv_desc_heap.initialize(4096, false);
+	result &= srv_desc_heap.initialize(4096, true);
 	result &= uav_desc_heap.initialize(512, false);
+	if (!result) return failed_init();
+
+	// Here using the placement new to create the gfx_command
+	new(&gfx_command) d3d12_command(main_device, D3D12_COMMAND_LIST_TYPE_DIRECT);
+	if (!gfx_command.command_queue()) return failed_init();
 
 	NAME_D3D12_OBJECT(main_device, L"Main D3D12 DEVICE");
 	NAME_D3D12_OBJECT(rtv_desc_heap.heap(), L"RTV Descriptor Heap");
@@ -342,7 +343,6 @@ initialize()
 	NAME_D3D12_OBJECT(srv_desc_heap.heap(), L"SRV Descriptor Heap");
 	NAME_D3D12_OBJECT(uav_desc_heap.heap(), L"UAV Descriptor Heap");
 
-	if (!result) return failed_init();
 	return true;
 }
 

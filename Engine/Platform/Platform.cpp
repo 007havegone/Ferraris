@@ -14,39 +14,13 @@ struct window_info
     DWORD   style{ WS_VISIBLE };
     bool    is_fullscreen{ false };
     bool    is_closed{ false };
+    ~window_info() { assert(!is_fullscreen); }
 };
 
-utl::vector<window_info> windows;
-////////////////////////////////////////////////////////////////////////////////////
- // TODO: this part will be handled by a free-list container later
-utl::vector<u32> avariable_slots;
+utl::free_list<window_info> windows;
 
-u32
-add_to_windows(window_info info)
-{
-    u32 id{ u32_invalid_id };
-    if (avariable_slots.empty())
-    {
-        id = (u32)windows.size();
-        windows.emplace_back(info);
-    }
-    else
-    {
-        id = avariable_slots.back();
-        avariable_slots.pop_back();
-        assert(id != u32_invalid_id);
-        windows[id] = info;
-    }
-    return id;
-}
 
-void
-remove_from_windows(u32 id)
-{
-    assert(id < windows.size());
-    avariable_slots.emplace_back(id);
-}
-///////////////////////////////////////////////////////////////////////////////////
+
 window_info&
 get_from_id(window_id id)
 {
@@ -255,7 +229,7 @@ create_window(const window_init_info* const init_info /* = nullptr*/)
     if (info.hwnd)
     {
         SetLastError(0);
-        window_id id{ add_to_windows(info) };
+        window_id id{ windows.add(info) };
         SetWindowLongPtr(info.hwnd, GWLP_USERDATA, (LONG_PTR)id); // save the id into the handle
         // Set in the "extra" bytes the pointer to the window callback function
         // which handles messages for the window.
@@ -274,7 +248,7 @@ remove_window(window_id id)
 {
     window_info& info{ get_from_id(id) };
     DestroyWindow(info.hwnd);
-    remove_from_windows(id);
+    windows.remove(id);
 }
 #else
 #error "must implement at least one platform"

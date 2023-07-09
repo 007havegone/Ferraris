@@ -242,9 +242,13 @@ public:
 	{
 		if (this != std::addressof(o))
 		{
-			auto temp{ o };
-			o = *this;
-			*this = temp;
+			auto temp(std::move(o));
+			// instead of using the Move-assignment operator, we using the move
+			// because we don't need to call destroy().
+			/*o = std::move(*this);
+			*this = std::move(temp);*/
+			o.move(*this);
+			move(temp);
 		}
 	}
 

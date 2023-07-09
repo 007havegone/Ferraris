@@ -3,6 +3,9 @@
 
 namespace ferraris::utl {
 
+#if USE_STL_VECTOR
+#pragma message("WARNING: using utl::free_list with std::vector result in duplicate calls to class constructor!")
+#endif
 /**
 * In free list, the we use the first 4 bytes of element as
 * the free idnex.
@@ -20,6 +23,12 @@ public:
 	~free_list()
 	{
 		assert(!_size);
+		// Before calling the destructor of utl::vector.
+		// set the memory to 0, which may contain the valid data.
+		// As for window_info is ok.
+#if USE_STL_VECTOR
+		memset(_array.data(), 0, _array.size() * sizeof(T));
+#endif
 	}
 	// add a new item and return its index
 	template<class... params>
@@ -97,9 +106,12 @@ private:
 			return true;
 		}
 	}
-
+#if USE_STL_VECTOR
 	utl::vector<T>		_array;
-	u32					_next_free_index{ u32_invalid_id }; // free index head
-	u32					_size{ 0 }; // size of element
+#else
+	utl::vector<T, false>		_array;
+#endif
+	u32							_next_free_index{ u32_invalid_id }; // free index head
+	u32							_size{ 0 }; // size of element
 };
 }

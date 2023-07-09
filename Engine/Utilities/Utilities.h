@@ -1,6 +1,6 @@
 #pragma once
 
-#define USE_STL_VECTOR 1
+#define USE_STL_VECTOR 0
 #define USE_STL_DEQUE 1
 
 #if USE_STL_VECTOR
@@ -22,6 +22,15 @@ void erase_unordered(std::vector<T>& v, size_t index)
 	{
 		v.clear();
 	}
+}
+}
+#else
+#include "Vector.h"
+namespace ferraris::utl{
+template<typename T>
+void erase_unordered(vector<T>& v, size_t index)
+{
+	v.erase_unordered(index);
 }
 }
 #endif

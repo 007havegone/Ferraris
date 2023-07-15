@@ -9,6 +9,8 @@
 using namespace Microsoft::WRL;
 
 namespace ferraris::graphics::d3d12::core {
+// TODO: remove when you're done showing how to create a root signature the tedious way
+void create_a_root_signature();
 namespace {
 
 	
@@ -345,6 +347,8 @@ initialize()
 	NAME_D3D12_OBJECT(srv_desc_heap.heap(), L"SRV Descriptor Heap");
 	NAME_D3D12_OBJECT(uav_desc_heap.heap(), L"UAV Descriptor Heap");
 
+	// TODO. remove
+	create_a_root_signature();
 	return true;
 }
 
@@ -471,6 +475,94 @@ render_surface(surface_id id)
 	// Done recording commands. Now execute commands,
 	// signal and increment the fence value for next frame.
 	gfx_command.end_frame();
+}
+
+// NOTE: this function demostrates how to create a root signature as an example
+//		 which will be remvoed later.
+void
+create_a_root_signature()
+{
+	D3D12_ROOT_PARAMETER1 params[3];
+	{// param 0: 2 constants
+		auto & param = params[0];
+		param.ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
+		D3D12_ROOT_CONSTANTS consts{};
+		consts.Num32BitValues = 2;
+		consts.ShaderRegister = 0;// b0
+		consts.RegisterSpace = 0;
+		param.Constants = consts;
+		param.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	}
+	{// param 1: 1 Constant Buffer View(Descriptor)
+		auto& param = params[1];
+		param.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		D3D12_ROOT_DESCRIPTOR1 root_desc{};
+		root_desc.Flags = D3D12_ROOT_DESCRIPTOR_FLAG_NONE;
+		root_desc.ShaderRegister = 1;
+		root_desc.RegisterSpace = 0;
+		param.Descriptor = root_desc;
+		param.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	}
+	{// param 2: descriptor table(unbounded/bindless)
+		auto& param = params[2];
+		param.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		D3D12_ROOT_DESCRIPTOR_TABLE1 table{};
+		table.NumDescriptorRanges = 1;
+		D3D12_DESCRIPTOR_RANGE1 range{};
+		range.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+		range.NumDescriptors = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+		range.Flags = D3D12_DESCRIPTOR_RANGE_FLAG_DESCRIPTORS_VOLATILE;
+		range.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+		range.BaseShaderRegister = 0;
+		range.RegisterSpace = 0;
+		table.pDescriptorRanges = &range;// here the range can be a array
+		param.DescriptorTable = table;
+		param.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	}
+	D3D12_STATIC_SAMPLER_DESC sample_desc{};
+	sample_desc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	sample_desc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	sample_desc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	sample_desc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+	D3D12_ROOT_SIGNATURE_DESC1 desc{};
+	desc.Flags =
+		D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
+		D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
+		D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
+		D3D12_ROOT_SIGNATURE_FLAG_DENY_AMPLIFICATION_SHADER_ROOT_ACCESS |
+		D3D12_ROOT_SIGNATURE_FLAG_DENY_MESH_SHADER_ROOT_ACCESS;
+	desc.NumParameters = _countof(params);
+	desc.NumStaticSamplers = 1;
+	desc.pParameters = &params[0];
+	desc.pStaticSamplers = &sample_desc;
+
+
+	D3D12_VERSIONED_ROOT_SIGNATURE_DESC rs_desc{};
+	rs_desc.Version = D3D_ROOT_SIGNATURE_VERSION_1_1;
+	rs_desc.Desc_1_1 = desc;
+
+	HRESULT hr{ S_OK };
+	// Serialize the signature
+	ID3DBlob* root_sig_blob{ nullptr };
+	ID3DBlob* error_blob{ nullptr };
+	if (FAILED(hr = D3D12SerializeVersionedRootSignature(&rs_desc, &root_sig_blob, &error_blob)))
+	{
+		DEBUG_OP(const char* error_msg{ error_blob ? (const char*)error_blob->GetBufferPointer() : "" });
+		DEBUG_OP(OutputDebugStringA(error_msg));
+		return;
+	}
+	
+	assert(root_sig_blob);
+	ID3D12RootSignature* root_sig{ nullptr };
+	DXCall( hr = device()->CreateRootSignature(0, root_sig_blob->GetBufferPointer(), root_sig_blob->GetBufferSize(), IID_PPV_ARGS(&root_sig)));
+	release(root_sig_blob);
+	release(error_blob);
+
+	// use root_sig
+
+	// when renderer shut down
+	release(root_sig);
 }
 }
 

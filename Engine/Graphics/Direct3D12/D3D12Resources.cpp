@@ -226,6 +226,10 @@ d3d12_depth_buffer::d3d12_depth_buffer(d3d12_texture_init_info info)
 	D3D12_SHADER_RESOURCE_VIEW_DESC srv_desc{};
 	if (info.desc->Format == DXGI_FORMAT_D32_FLOAT)
 	{
+		// the texture resource needs to viewed as DXGI_FORMAT_D32_FLOAT in pre-pass
+		// in light-culling compute shader, I read from depth buffer, it needs to view as
+		// DXGI_FORMAT_R32_FLOAT.
+		// Therefore, we view it as TYPELESS here.
 		info.desc->Format = DXGI_FORMAT_R32_TYPELESS;
 		srv_desc.Format = DXGI_FORMAT_R32_FLOAT;
 	}

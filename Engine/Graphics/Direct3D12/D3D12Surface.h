@@ -7,6 +7,7 @@ namespace ferraris::graphics::d3d12 {
 class d3d12_surface
 {
 public:
+	constexpr static DXGI_FORMAT default_back_buffer_format{ DXGI_FORMAT_R8G8B8A8_UNORM_SRGB };
 	constexpr static u32 buffer_count{ 3 };
 	explicit d3d12_surface(platform::window window)
 		: _window(window)
@@ -101,6 +102,7 @@ private:
 	IDXGISwapChain4*		_swap_chain{ nullptr };
 	render_target_data		_render_target_data[buffer_count]{};
 	platform::window		_window{};
+	DXGI_FORMAT				_format{ default_back_buffer_format };
 	mutable u32				_current_bb_index{ 0 }; // current back-buffer index
 	u32						_allow_tearing{ 0 };
 	u32						_present_flags{ 0 };

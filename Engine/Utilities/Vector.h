@@ -179,13 +179,13 @@ public:
 	}
 
 	// Remove the item at specified location
-	constexpr T* const earse(T* const item)
+	constexpr T* const erase(T* const item)
 	{
 		assert(_data && item >= std::addressof(_data[0]) &&
 			item < std::addressof(_data[_size]));
 
-		if constexpr (destruct) item->T();
-		--size;
+		if constexpr (destruct) item->~T();
+		--_size;
 		// Only move if not the last one item
 		if (item < std::addressof(_data[_size]))
 		{

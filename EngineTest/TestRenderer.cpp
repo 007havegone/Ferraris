@@ -77,7 +77,7 @@ bool
 engine_test::initialize()
 {
 	bool result{ graphics::initialize(graphics::graphics_platform::direct3d12) };
-	if (!realloc) return result;
+	if (!result) return result;
 	platform::window_init_info info[]
 	{
 		{&win_proc, nullptr, L"Render window 1", 100, 100, 400, 800},

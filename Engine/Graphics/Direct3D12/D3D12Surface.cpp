@@ -13,7 +13,7 @@ to_non_srgb(DXGI_FORMAT format)
 
 } // anonymous namespace
 void
-d3d12_surface::create_swap_chain(IDXGIFactory7 * factory, ID3D12CommandQueue * cmd_queue, DXGI_FORMAT format = default_back_buffer_format)
+d3d12_surface::create_swap_chain(IDXGIFactory7 * factory, ID3D12CommandQueue * cmd_queue, DXGI_FORMAT format)
 {
 	assert(factory && cmd_queue);
 	release();

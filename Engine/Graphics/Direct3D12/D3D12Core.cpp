@@ -182,7 +182,6 @@ utl::vector<IUnknown*>			deferred_releases[frame_buffer_count]{};
 u32								deferred_release_flag[frame_buffer_count]{};
 std::mutex						deferred_release_mutex{};
 
-constexpr DXGI_FORMAT			render_target_format{ DXGI_FORMAT_R8G8B8A8_UNORM_SRGB };
 constexpr D3D_FEATURE_LEVEL		minimum_feature_level{ D3D_FEATURE_LEVEL_11_0 };
 
 
@@ -420,7 +419,7 @@ surface
 create_surface(platform::window window)
 {
 	surface_id id{ surfaces.add(window) };
-	surfaces[id].create_swap_chain(dxgi_factory, gfx_command.command_queue(), render_target_format);
+	surfaces[id].create_swap_chain(dxgi_factory, gfx_command.command_queue());
 	return surface{ id };
 }
 void

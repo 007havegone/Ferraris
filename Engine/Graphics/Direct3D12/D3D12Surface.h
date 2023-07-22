@@ -45,7 +45,7 @@ public:
 
 	~d3d12_surface() { release(); }
 
-	void create_swap_chain(IDXGIFactory7* factory, ID3D12CommandQueue* cmd_queue, DXGI_FORMAT format);
+	void create_swap_chain(IDXGIFactory7* factory, ID3D12CommandQueue* cmd_queue, DXGI_FORMAT format = default_back_buffer_format);
 	void present() const;
 	void resize();
 

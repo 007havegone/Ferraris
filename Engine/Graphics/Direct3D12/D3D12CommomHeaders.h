@@ -57,3 +57,6 @@ if(swprintf_s(fullname, L"%s[%u]", name, n) > 0){	\
 #define NAME_D3D12_OBJECT_INDEX(x, n, name)
 #endif
 
+// These two headers are included almost all modules
+#include "D3D12Helpers.h"
+#include "D3D12Resources.h"

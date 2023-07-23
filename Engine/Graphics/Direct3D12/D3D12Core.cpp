@@ -1,7 +1,6 @@
 #include "D3D12Core.h"
-#include "D3D12Resources.h"
 #include "D3D12Surface.h"
-#include "D3D12Helpers.h"
+#include "D3D12Shaders.h"
 // Note that while ComPtr is used to manage the lifetime of resources on the CPU,
 // it has no understanding of the lifetime of resources on the GPU. Apps must account
 // for the GPU lifetime of resources to avoid destroying objects that may still be

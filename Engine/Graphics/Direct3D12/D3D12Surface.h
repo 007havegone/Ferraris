@@ -1,6 +1,5 @@
 #pragma once
 #include "D3D12CommomHeaders.h"
-#include "D3D12Resources.h"
 
 namespace ferraris::graphics::d3d12 {
 

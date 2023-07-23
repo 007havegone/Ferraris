@@ -338,6 +338,10 @@ initialize()
 	new(&gfx_command) d3d12_command(main_device, D3D12_COMMAND_LIST_TYPE_DIRECT);
 	if (!gfx_command.command_queue()) return failed_init();
 
+	// init shader module
+	if (!shaders::initialize())
+		return failed_init();
+
 	NAME_D3D12_OBJECT(main_device, L"Main D3D12 DEVICE");
 	NAME_D3D12_OBJECT(rtv_desc_heap.heap(), L"RTV Descriptor Heap");
 	NAME_D3D12_OBJECT(dsv_desc_heap.heap(), L"DSV Descriptor Heap");
@@ -358,7 +362,18 @@ shutdown()
 	{
 		process_deferred_releases(i);
 	}
+	// shutdown shader module
+	shaders::shutdown();
+
 	release(dxgi_factory);
+
+	// NOTE: some module free their descriptor when they shutdown.
+	// We process those by calling process_defferred_free once again.
+
+	rtv_desc_heap.process_deferred_free(0);
+	dsv_desc_heap.process_deferred_free(0);
+	srv_desc_heap.process_deferred_free(0);
+	uav_desc_heap.process_deferred_free(0);
 
 	rtv_desc_heap.release();
 	dsv_desc_heap.release();

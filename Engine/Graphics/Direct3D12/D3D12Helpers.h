@@ -22,7 +22,7 @@ struct d3d12_descriptor_range : public D3D12_DESCRIPTOR_RANGE1
 											  u32 descriptor_count, u32 shader_register, u32 space = 0,
 											  D3D12_DESCRIPTOR_RANGE_FLAGS flags = D3D12_DESCRIPTOR_RANGE_FLAG_NONE,
 											  u32 offset_from_table_start = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND)
-		: D3D12_DESCRIPTOR_RANGE1{range_type, descriptor_count, shader_register, 0, flags, offset_from_table_start}
+		: D3D12_DESCRIPTOR_RANGE1{range_type, descriptor_count, shader_register, space, flags, offset_from_table_start}
 	{}
 };
 struct d3d12_root_parameter : public D3D12_ROOT_PARAMETER1

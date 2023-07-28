@@ -18,7 +18,6 @@ LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
 	case WM_DESTROY:
 	{
-		bool all_closed{ true };
 		if (game_window.window.is_closed())
 		{
 			PostQuitMessage(0);

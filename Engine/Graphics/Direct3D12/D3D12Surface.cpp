@@ -112,6 +112,6 @@ d3d12_surface::release()
 void
 d3d12_surface::resize()
 {
-#pragma message("Warning: d3d12_surface::resize() is incompleted");
+#pragma message("Warning: d3d12_surface::resize() is incompleted")
 }
 }

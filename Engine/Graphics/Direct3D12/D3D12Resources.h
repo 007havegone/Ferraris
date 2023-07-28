@@ -185,7 +185,7 @@ public:
 
 	~d3d12_depth_buffer() { release(); }
 	void release();
-	constexpr D3D12_CPU_DESCRIPTOR_HANDLE rtv(u32 mip_index) const { return _dsv.cpu; }
+	constexpr D3D12_CPU_DESCRIPTOR_HANDLE dsv() const { return _dsv.cpu; }
 	constexpr descriptor_handle srv() const { return _texture.srv(); }
 	constexpr ID3D12Resource* const resource() const { return _texture.resource(); }
 private:

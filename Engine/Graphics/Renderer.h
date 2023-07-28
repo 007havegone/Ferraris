@@ -6,6 +6,9 @@ namespace ferraris::graphics {
 
 DEFINE_TYPED_ID(surface_id);
 
+// Here we need to add the abstract layer to hidden 
+// the implementation of different Rendering API, with help of the render_surface structure
+
 class surface
 {
 public:

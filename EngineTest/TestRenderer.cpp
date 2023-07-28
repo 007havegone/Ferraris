@@ -1,6 +1,6 @@
-#include "..\Platform\PlatformTypes.h"
-#include "..\Platform\Platform.h"
-#include "..\Graphics\Renderer.h"
+#include "Platform\PlatformTypes.h"
+#include "Platform\Platform.h"
+#include "Graphics\Renderer.h"
 #include "TestRenderer.h"
 #include "ShaderCompilation.h"
 #if TEST_RENDERER

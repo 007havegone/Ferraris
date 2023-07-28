@@ -30,6 +30,7 @@ public:
 	void end()
 	{
 		auto dt = clock::now() - _start;
+		// Compute the dt for current frame to update the _ms_avg during _counter times.
 		_ms_avg += ((float)std::chrono::duration_cast<std::chrono::milliseconds>(dt).count() - _ms_avg) / (float)_counter;
 		++_counter;
 		// Display the frame information and reset for next second.

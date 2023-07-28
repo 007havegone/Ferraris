@@ -3,7 +3,7 @@
 #include "Renderer.h"
 #include "Platform\Window.h"
 namespace ferraris::graphics{
-// Current we only use the same initialization and shutdown	 for SDK
+// Current we only use the same initialization and shutdown	for SDK
 // If need more customize can use the class for inherited
 struct platform_interface
 {

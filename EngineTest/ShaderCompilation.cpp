@@ -200,7 +200,7 @@ save_compiled_shaders(const utl::vector<ComPtr<IDxcBlob>>& shaders)
 	{
 		const D3D12_SHADER_BYTECODE byte_code{ shader->GetBufferPointer(), shader->GetBufferSize() };
 		file.write((char*)&byte_code.BytecodeLength, sizeof(byte_code.BytecodeLength));
-		file.write((char*)&byte_code.pShaderBytecode, byte_code.BytecodeLength);
+		file.write((char*)byte_code.pShaderBytecode, byte_code.BytecodeLength);
 	}
 
 	file.close();

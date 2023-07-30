@@ -102,18 +102,21 @@ struct d3d12_root_signature_desc : public D3D12_ROOT_SIGNATURE_DESC1
 		return create_root_signature(*this);
 	}
 };
-
+#pragma warning(push)
+#pragma warning(disable : 4324)	// disable padding warning
 template<D3D12_PIPELINE_STATE_SUBOBJECT_TYPE type, typename T>
 class alignas(void*) d3d12_pipeline_state_subobject
 {
 public:
 	d3d12_pipeline_state_subobject() = default;
 	constexpr explicit d3d12_pipeline_state_subobject(T subobject) : _type{ type }, _subobject{ subobject }{}
-	d3d12_pipeline_state_subobject& operator=(const T& suboject) { _subobject = _subobject; return *this; }
+	d3d12_pipeline_state_subobject& operator=(const T& subobject) { _subobject = subobject; return *this; }
 private:
 	const D3D12_PIPELINE_STATE_SUBOBJECT_TYPE _type{ type };
 	T _subobject{};
 };
+
+#pragma warning(pop)
 
 // Pipeline State Suboject (PSS) macro
 #define PSS(name, ...) using d3d12_pipeline_state_subobject_##name = d3d12_pipeline_state_subobject<__VA_ARGS__>;

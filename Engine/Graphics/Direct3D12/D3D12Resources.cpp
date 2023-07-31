@@ -91,11 +91,9 @@ descriptor_heap::allocate()
 	{
 		handle.gpu.ptr = _gpu_start.ptr + offset;
 	}
-#ifdef _DEBUG
+	handle.index = index;
 	// because of the friend class
 	DEBUG_OP(handle.container = this);
-	DEBUG_OP(handle.index = index);
-#endif
 	return handle;
 
 }

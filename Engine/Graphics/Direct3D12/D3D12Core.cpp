@@ -1,6 +1,8 @@
 #include "D3D12Core.h"
 #include "D3D12Surface.h"
 #include "D3D12Shaders.h"
+#include "D3D12GPass.h"
+#include "D3D12PostProcess.h"
 // Note that while ComPtr is used to manage the lifetime of resources on the CPU,
 // it has no understanding of the lifetime of resources on the GPU. Apps must account
 // for the GPU lifetime of resources to avoid destroying objects that may still be
@@ -82,11 +84,13 @@ public:
 		DXCall(_cmd_list->Reset(frame.cmd_allocator, nullptr));// the pipeline state object describe the GPU with shaders and resources should be used, and more
 	}
 	// Signal the fence with the new fence value.
-	void end_frame()
+	void end_frame(const d3d12_surface& surface)
 	{
 		DXCall(_cmd_list->Close());
 		ID3D12CommandList* const cmd_lists[]{ _cmd_list };
 		_cmd_queue->ExecuteCommandLists(_countof(cmd_lists), &cmd_lists[0]);
+		// Presenting swap chain buffers happens in lockstep with frame buffers.
+		surface.present();
 		u64& fence_value{ _fence_value };
 		++fence_value;
 		command_frame& frame{ _cmd_frames[_frame_index] };
@@ -171,6 +175,7 @@ id3d12_device*					main_device{ nullptr };
 IDXGIFactory7*					dxgi_factory{ nullptr };
 d3d12_command					gfx_command;
 surface_collection				surfaces;
+d3dx::d3d12_resource_barrier	resource_barriers{};
 
 descriptor_heap					rtv_desc_heap{ D3D12_DESCRIPTOR_HEAP_TYPE_RTV };
 descriptor_heap					dsv_desc_heap{ D3D12_DESCRIPTOR_HEAP_TYPE_DSV };
@@ -339,7 +344,7 @@ initialize()
 	if (!gfx_command.command_queue()) return failed_init();
 
 	// init shader module
-	if (!shaders::initialize())
+	if (!(shaders::initialize() && gpass::initialize() && fx::initialize()))
 		return failed_init();
 
 	NAME_D3D12_OBJECT(main_device, L"Main D3D12 DEVICE");
@@ -363,6 +368,8 @@ shutdown()
 		process_deferred_releases(i);
 	}
 	// shutdown shader module
+	fx::shutdown();
+	gpass::shutdown();
 	shaders::shutdown();
 
 	release(dxgi_factory);
@@ -473,14 +480,48 @@ render_surface(surface_id id)
 		process_deferred_releases(frame_idx);
 	}
 	const d3d12_surface& surface{ surfaces[id] };
+	ID3D12Resource * const current_back_buffer{ surface.back_buffer() };
+	
+	d3d12_frame_info frame_info
+	{
+		surface.width(),
+		surface.height()
+	};
+	gpass::set_size({ frame_info.surface_width, frame_info.surface_height });
+	d3dx::d3d12_resource_barrier& barrier{ resource_barriers };
 
-	// Presenting swap chain buffers happens in lockstep with frame buffers.
-	surface.present();
-	// Record commands
-	// ...
+	// Record command
+	ID3D12DescriptorHeap* const heaps[]{ srv_desc_heap.heap() };
+	cmd_list->SetDescriptorHeaps(1, &heaps[0]);
+	// Rasteriazation commands
+	cmd_list->RSSetViewports(1, &surface.viewport());
+	cmd_list->RSSetScissorRects(1, &surface.scissor_rect());
+	
+
+	// Depth prepass
+	gpass::add_transitions_for_depth_prepass(barrier);
+	barrier.apply(cmd_list);
+	gpass::set_render_target_for_depth_prepass(cmd_list);
+	gpass::depth_prepass(cmd_list, frame_info);
+
+	// Geometry and lighting pass
+	gpass::add_transitions_for_gpass(barrier);
+	barrier.apply(cmd_list);
+	gpass::set_render_target_for_gpass(cmd_list);
+	gpass::render(cmd_list, frame_info);
+
+	d3dx::transition_resource(cmd_list, current_back_buffer, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+	// Post-processing
+	gpass::add_transitions_for_post_process(barrier);
+	barrier.apply(cmd_list);
+	// // Write the data into current back buferr.
+	fx::post_process(cmd_list, surface.rtv());
+	// After post processing
+	d3dx::transition_resource(cmd_list, current_back_buffer, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+	
 	// Done recording commands. Now execute commands,
 	// signal and increment the fence value for next frame.
-	gfx_command.end_frame();
+	gfx_command.end_frame(surface);
 }
 }
 

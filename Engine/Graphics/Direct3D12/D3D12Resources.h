@@ -9,6 +9,7 @@ class descriptor_heap;
 struct descriptor_handle {
 	D3D12_CPU_DESCRIPTOR_HANDLE	cpu{};
 	D3D12_GPU_DESCRIPTOR_HANDLE	gpu{};
+	u32							index{ u32_invalid_id };
 
 	[[ nodiscard ]] constexpr bool is_valid() const { return cpu.ptr != 0; }
 	[[ nodiscard ]] constexpr bool is_shader_visible() const { return gpu.ptr != 0; }
@@ -17,7 +18,6 @@ struct descriptor_handle {
 private:
 	friend class descriptor_heap;
 	descriptor_heap*	container{ nullptr };
-	u32					index{ u32_invalid_id };
 
 #endif
 };

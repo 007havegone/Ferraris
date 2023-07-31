@@ -1,6 +1,12 @@
 #pragma once
 #include "CommonHeaders.h"
 #include "Graphics/Renderer.h"
+
+// Skip definition of min/max macros in window.h
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif // !NOMINMAX
+
 #include <dxgi1_6.h>
 #include <d3d12.h>
 #include <wrl.h>

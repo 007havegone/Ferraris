@@ -1,7 +1,11 @@
 #pragma once
 #include "D3D12CommomHeaders.h"
 namespace ferraris::graphics::d3d12 {
-class descriptor_heap;
+struct d3d12_frame_info
+{
+	u32 surface_width{};
+	u32 surface_height{};
+};
 }
 namespace ferraris::graphics::d3d12::core {
 

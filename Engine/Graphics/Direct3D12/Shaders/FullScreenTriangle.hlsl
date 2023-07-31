@@ -5,7 +5,6 @@ struct VSOutput
 
 };
 
-
 VSOutput FullScreenTriangleVS(in uint VertexIdx : SV_VertexID)
 {
 	VSOutput output;

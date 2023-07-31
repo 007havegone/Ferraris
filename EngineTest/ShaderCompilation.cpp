@@ -70,6 +70,7 @@ public:
 		std::wstring file{ to_wstring(info.file) };
 		std::wstring func{ to_wstring(info.function) };
 		std::wstring prof{ to_wstring(_profile_strings[(u32)info.type]) };
+		std::wstring inc{ to_wstring(shaders_source_path) };
 
 		// Usage of the DxcCompiler
 		// https://github.com/microsoft/DirectXShaderCompiler/wiki/Using-dxc.exe-and-dxcompiler.dll
@@ -80,6 +81,8 @@ public:
 			func.c_str(),							// Entry function
 			L"-T",
 			prof.c_str(),							// Target profile
+			L"-I",
+			inc.c_str(),							// Include path
 			DXC_ARG_ALL_RESOURCES_BOUND,
 #if _DEBUG
 			DXC_ARG_DEBUG,
